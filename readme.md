@@ -1,4 +1,4 @@
-# Step to set you the project locally
+# Step to set the project locally
 ## 1. `npm install`  to set the frame work up
 ## 2. `npm run-script bootstrap` to get the packages ready
 ## 3. `npm run-script deploy --profile default` to deploy to aws. --profile is option if you want to deploy to diff account use this
@@ -8,9 +8,9 @@
 [Run lambda locally](https://github.com/lambci/docker-lambda#run-examples)
 
 ```
-npm run-script run:locally
-OR
-docker run --rm -e DOCKER_LAMBDA_STAY_OPEN=1  -p 9001:9001 -v %CD%:/var/task:ro,delegated  lambci/lambda:nodejs12.x packages/handler/index.handler
+npm run-script run:locally:windows 
+or 
+npm run-script run:locally:mac
  ```
 ## POSTMAN 
 ### POST http://localhost:9001/2015-03-31/functions/myfunction/invocations
