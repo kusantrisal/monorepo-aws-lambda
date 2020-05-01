@@ -1,0 +1,26 @@
+.profile-card {
+  height: 100%;
+}
+.example-header-image {
+  background-size: contain;
+}
+
+/* email and phone form */
+.example-full-width {
+  width: 100%;
+}
+
+.cover {
+  margin: auto;
+  min-width: 95%;
+  height: 400px;
+  object-fit: cover;
+}
+
+.mat-tab-labels {
+  justify-content: center;
+}
+
+mat-card-header{
+  justify-content: center;
+}

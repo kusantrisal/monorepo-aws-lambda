@@ -1,0 +1,152 @@
+<mat-drawer-container class="example-container" autosize>
+  <!-- {{response | json}} -->
+  <!-- close and open sidenav -->
+  <div style="width: 100%; display: block; background-color: rgb(184, 219, 189);">
+    <button mat-button mat-icon-button (click)="drawer.toggle()">
+      <mat-icon>menu_open</mat-icon>
+    </button>
+    <span>Display current folder info</span>
+  </div>
+  <!-- sidenav -->
+  <mat-drawer #drawer class="example-sidenav" mode="side" opened>
+
+    <!-- form to add folder -->
+    <mat-form-field class="example-form-field">
+      <mat-label>Add notes</mat-label>
+      <input matInput type="text" [(ngModel)]="value">
+      <!-- button to clean field -->
+      <button mat-button *ngIf="value" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
+        <mat-icon>close</mat-icon>
+      </button>
+      <!-- button to add folder -->
+      <button mat-button *ngIf="value" matSuffix mat-icon-button aria-label="Clear" (click)="addFolder(value)">
+        <mat-icon>done</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <!-- form to filter the list in side nav -->
+    <mat-form-field>
+      <mat-label>Filter by name</mat-label>
+      <input matInput (keyup)="applyFilterOnSideNav($event)" placeholder="Photos" />
+    </mat-form-field>
+
+    <mat-list>
+      <h3 mat-subheader>Looking for </h3>
+      <mat-list-item *ngFor="let folder of folders; let i = index">
+        <mat-icon mat-list-icon (click)="displayFolderContent(i, folder)" style="cursor: pointer;">folder</mat-icon>
+        <h4 mat-line>{{ folder.name }}</h4>
+        <p mat-line>{{ folder.updated | date }}</p>
+        <!-- <button mat-list-icon mat-button (click)="addFolder(i, folder)">
+          <mat-icon mat-list-icon >folder</mat-icon>
+        </button> -->
+
+      </mat-list-item>
+
+      <mat-divider></mat-divider>
+
+      <h3 mat-subheader>Notes</h3>
+      <mat-list-item *ngFor="let note of notes">
+        <mat-icon mat-list-icon>note</mat-icon>
+        <h4 mat-line>{{ note.name }}</h4>
+        <p mat-line>{{ note.updated | date }}</p>
+      </mat-list-item>
+    </mat-list>
+  </mat-drawer>
+  <!-- sidenav -->
+
+  <!-- content starts -->
+  <div class="example-sidenav-content">
+
+    <div fxLayout="row wrap " fxLayoutAlign="center center">
+      <div *ngFor="let note of notes" fxFlex="0 0 100%" style="background-color: grey;" >
+        <mat-card class="image-card">
+          <mat-card-header>
+            <div mat-card-avatar class="example-header-image"></div>
+            <mat-card-title>Shiba Inu</mat-card-title>
+            <mat-card-subtitle>Dog Breed</mat-card-subtitle>
+          </mat-card-header>
+          <!-- <img mat-card-image [src]="note.image" alt="someimage"> -->
+          <mat-card-content>
+            <p>
+              The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.
+              A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally
+              bred for hunting.
+            </p>
+          </mat-card-content>
+
+          <mat-card-actions>
+            <mat-chip-list aria-label="Fish selection">
+              <mat-chip color="warn" selected>InReview</mat-chip>
+              <mat-chip color="primary">InProgress</mat-chip>
+              <mat-chip color="accent" selected>Done</mat-chip>
+            </mat-chip-list>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </div>
+    <!-- TODO content goes here -->
+    <div fxLayout="column" style="background-color: green;" fxHide.xs>
+
+      <div fxLayout="row" fxLayoutAlign="space-around center" class="greyBackGround" fxLayoutGap="2%">
+
+        <div fxFlex="10" class="greyBackGround">
+          <h1>Logo</h1>
+        </div>
+        <div fxFlex="70">
+          <p>Logo</p>
+        </div>
+      </div>
+
+      <div fxFlex="20" fxLayout="row" fxLayoutAlign="end center" class="greyBackGround">
+        what is this
+      </div>
+
+    </div>
+
+  </div>
+  <!-- content ends -->
+
+</mat-drawer-container>
+
+<!-- back up  -->
+<mat-form-field>
+  <mat-label>Filter</mat-label>
+  <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia" />
+</mat-form-field>
+
+<div class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource" matSort>
+    <!-- ID Column -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+      <td mat-cell *matCellDef="let row">{{ row.id }}</td>
+    </ng-container>
+
+    <!-- Progress Column -->
+    <ng-container matColumnDef="progress">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Progress</th>
+      <td mat-cell *matCellDef="let row">{{ row.progress }}%</td>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+      <td mat-cell *matCellDef="let row">{{ row.name }}</td>
+    </ng-container>
+
+    <!-- Color Column -->
+    <ng-container matColumnDef="color">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Color</th>
+      <td mat-cell *matCellDef="let row" [style.color]="row.color">
+        {{ row.color }}
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+
+  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+</div>
+
+<div #showMe>showMe is binded with @ViewChild('showMe') showMe; in controller</div>

@@ -2,8 +2,11 @@
   "name": "root",
   "private": true,
   "scripts": {
-    "run:locally:windows": "docker run --rm -e DOCKER_LAMBDA_STAY_OPEN=1  -p 9001:9001 -v %CD%:/var/task:ro,delegated  lambci/lambda:nodejs12.x packages/handler/index.handler",
-    "run:locally:mac":"docker run --rm -d -e DOCKER_LAMBDA_STAY_OPEN=1  -p 9001:9001 -v '$PWD':/var/task:ro,delegated  lambci/lambda:nodejs12.x packages/handler/index.handler",
+    "run":"npm run-script run:angular & npm run-script run:express",
+    "run:angular": "cd .\\angular\\frontend && npm start",
+    "run:express": "cd .\\express\\maestro && npm run-script start",
+    "run:locally:windows": "docker run --rm -e DOCKER_LAMBDA_STAY_OPEN=1 -p 9001:9001 -v %CD%:/var/task:ro,delegated  lambci/lambda:nodejs12.x packages/handler/index.handler",
+    "run:locally:mac": "docker run --rm -d -e DOCKER_LAMBDA_STAY_OPEN=1  -p 9001:9001 -v '$PWD':/var/task:ro,delegated  lambci/lambda:nodejs12.x packages/handler/index.handler",
     "run:api": "cd .\\packages\\api && node index",
     "cdk": "cdk",
     "clean": "npm run-script delete-modules && rmdir /s /q node_modules && rmdir /s /q cdk.out",

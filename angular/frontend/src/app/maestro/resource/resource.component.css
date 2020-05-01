@@ -1,0 +1,16 @@
+.example-card {
+  min-height: 100%;
+}
+
+::ng-deep .mat-card-content {
+  color: black;
+  text-align: center;
+}
+
+::ng-deep .mat-card {
+  /* 
+  border: 55px solid #000; */
+  border-radius: 0 !important;
+  border: 2px solid rgb(255, 255, 255);
+  /* border: #000 !important; */
+}

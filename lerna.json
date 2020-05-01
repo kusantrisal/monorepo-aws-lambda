@@ -1,6 +1,8 @@
 {
   "packages": [
-    "packages/*"
+    "packages/*",
+    "express/*",
+    "angular/*"
   ],
   "version": "0.0.0"
 }

@@ -1,0 +1,54 @@
+<!-- <Pre>{{memberState$ | async | json}}</Pre> -->
+<div *ngIf="value !== 0">
+  <p>{{value}}%</p>
+  <mat-progress-bar mode="determinate" value={{value}}></mat-progress-bar>
+</div>
+<div>
+  <input hidden #uploader type="file" (change)='onSubmit($event)'>
+  <button mat-icon-button (click)="uploader.click()">
+    <mat-icon>cloud_upload</mat-icon> Upload
+  </button>
+
+</div>
+<div fxLayout="row wrap" fxLayoutGap>
+
+  <div *ngFor="let resource of (memberStateResources$ | async)" fxFlex="0 0 100%" [ngStyle.gt-sm]="{'margin.px': 4}"
+    fxFlex.gt-sm="1 1 calc(25% - 2px)" fxFlex.gt-lg="1 1 calc(15% - 2px)">
+
+    <mat-card class="example-card">
+
+      <mat-card-actions>
+        <button mat-icon-button (click)="download()">
+          <mat-icon>cloud_download</mat-icon>
+        </button>
+        <button mat-icon-button (click)="delete()">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </mat-card-actions>
+
+      <!-- {{resource | json}} -->
+
+
+      <div *ngIf="resource.info.mimetype.indexOf('image') > -1"> <img mat-card-image [src]="resource.preSignedUrl"
+          style="object-fit: cover;"></div>
+      <div *ngIf="resource.info.mimetype.indexOf('video') > -1"> <video mat-card-image [src]="resource.preSignedUrl" controls> Your
+          browser does not support the video tag. </video></div>
+      <!-- <div *ngIf="resource.name.indexOf('pdf') > -1"> <embed mat-card-image name="plugin"
+                    [src]="getSantizeUrl( resource.preSignedUrl)" type="application/pdf"></div> -->
+      <!-- {{resource | json}} -->
+      <mat-card-content>
+        <p>{{resource.name}}</p>
+        <P>Uploaded Date: {{resource.createDate}}</P>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+
+<div class="example-button-row">
+  <button mat-button (click)="removeMemberFromState()"> Remove member
+    from state</button>
+  <!-- <button mat-button *ngIf="(memberState$ | async) as memberState" (click)="getResoucesByMemberUuid(memberState.member.memberUuid)">Get Resources</button> -->
+  <button mat-button (click)="getResoucesByMemberUuid()">Get Resources</button>
+
+
+</div>

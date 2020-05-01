@@ -1,0 +1,43 @@
+<mat-card>
+  Logs ad stuff goes here
+</mat-card>
+<div fxLayoutAlign="center center" class="display-box">
+  <mat-card fxFlex="500px">
+    <h1 style="text-align: center;">Sign in to App</h1>
+    {{ loginForm.value | json }}
+    <form
+      fxLayoutAlign="stretch"
+      fxLayout="column"
+      [formGroup]="loginForm"
+      (ngSubmit)="signIn()"
+    >
+      <mat-form-field>
+        <mat-label>Username</mat-label>
+        <input matInput formControlName="username" />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Password</mat-label>
+        <input matInput type="password" formControlName="password" />
+      </mat-form-field>
+
+      <button mat-raised-button color="accent">Sign In</button>
+
+      <div fxLayoutAlign="center center" layout="column">
+        <div style="text-align: center; padding-top: 1rem;">
+            By clicking Sign In, you agree to our Terms and have read and
+            acknowledge our US Privacy Statement.
+        </div>
+      </div>
+
+      <div style="padding-top: 1rem;">
+        <mat-checkbox style="float: left;">Remember Me</mat-checkbox>
+        <a style="float: right;" routerLink="/signup"
+          >Forgot your user ID or password</a
+        >
+      </div>
+
+
+    </form></mat-card
+  >
+</div>

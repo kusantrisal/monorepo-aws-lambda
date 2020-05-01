@@ -1,0 +1,32 @@
+* {
+  font-family: Arial, sans-serif;
+}
+
+.navbar {
+  justify-content: space-between;
+   height: 2.8rem; 
+}
+.fixed-header {
+   position: relative;
+  /* top: -25;
+  left: 0; */
+  z-index: 2;
+  width: 100% !important; 
+}
+span {
+  padding-right: 1rem;
+  font-size: medium;
+  font-weight: normal;
+  font-style: normal;
+  cursor: pointer;
+  display: inline-block;
+  outline: none;
+}
+
+span.active {
+  color: #AED581;
+}
+
+span:hover {
+  color: lightgray;
+}

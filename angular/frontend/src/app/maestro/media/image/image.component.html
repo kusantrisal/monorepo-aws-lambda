@@ -1,0 +1,80 @@
+<div fxLayout="column" style="background-color: rgb(255, 255, 255);">
+
+
+    <div class="custom-dropzone" ngx-dropzone [accept]="'image/*'" (change)="onSelect($event)">
+
+        <ngx-dropzone-label>
+            <img src="/assets/upload-logo-icon.png" width="30" height="30">
+            <br>
+            <Strong>Choose a file</Strong> or drag it here
+        </ngx-dropzone-label>
+
+        <ngx-dropzone-image-preview ngProjectAs="ngx-dropzone-preview" *ngFor="let f of files" [file]="f"
+            [removable]="true" (removed)="onRemove(f)">
+            <!-- 
+            <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
+            <ngx-dropzone-label>Size: {{ f.size }}</ngx-dropzone-label> -->
+        </ngx-dropzone-image-preview>
+
+    </div>
+
+    <button mat-raised-button color="accent" *ngIf="files.length" (click)="onSubmit()"
+        style="width: 100%;">Upload</button>
+
+    <!-- {{screenSize}} -->
+    <button mat-icon-button (click)="getResoucesByMemberUuid()">
+        <mat-icon>refresh</mat-icon>
+    </button>
+
+    <div fxFlex fxLayout="column" fxLayoutGap="10px" style="height: 100vh;">
+        <div fxLayout="row wrap">
+            <!-- loop over the cardList and show the cards -->
+            <div *ngFor="let resource of memberStateResources$ | async; let i = index"  fxFlex.lg="25" fxFlex.md="33"
+                fxFlex.sm="50" fxFlex.xs="100" fxLayout="column" style="padding: 5px;">
+                <!-- cards here -->
+                <mat-card class="mat-elevation-z1">
+                    <!-- TODO needs to be changed to preSignedUrlForThumbnail -->
+                    <img mat-card-image [src]="resource.preSignedUrlForOriginal"
+                        (click)="openDialog(resource)" />
+                    <!-- <mat-card-title> {{ resource.createDate }} </mat-card-title> -->
+                    <!-- <mat-card-content> {{  resource.createDate}} </mat-card-content> -->
+                    <!-- {{resource | json}} -->
+                    <mat-card-footer>
+                        <button mat-icon-button (click)="delete(resource.resourceUuid)">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </mat-card-footer>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- this over laps the last rowfxLayoutAlign="space-around" -->
+    <!-- <div fxLayout="row wrap" fxLayoutAlign="space-evenly center" fxLayoutGap="16px grid"
+        style="background-color: yellow;">
+        <mat-card *ngFor="let resource of memberStateResources$ | async; let i = index" style="background-color: pink;"> -->
+    <!-- <p>{{resource | json}}</p> -->
+    <!-- <img mat-card-image *ngIf="resource.info.mimetype.indexOf('image') > -1"
+                [src]="resource.preSignedUrlForThumbnail" style="min-width: 300px;">
+            <div *ngIf="resource.info.mimetype.indexOf('video') > -1"> <video mat-card-image
+                    [src]="resource.preSignedUrlForThumbnail" controls> Your
+                    browser does not support the video tag. </video></div> -->
+
+    <!-- <mat-card-content>
+                <p>{{resource.info.originalname }}</p>
+                <p>{{resource.info.size }}</p>
+                <P>Uploaded Date: {{resource.createDate}}</P>
+            </mat-card-content>
+
+            <mat-card-footer>
+                <button mat-icon-button (click)="delete(resource.resourceUuid)">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </mat-card-footer>
+
+        </mat-card>
+    </div> -->
+
+</div>
