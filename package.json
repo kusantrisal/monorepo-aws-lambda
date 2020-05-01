@@ -1,0 +1,31 @@
+{
+  "name": "root",
+  "private": true,
+  "scripts": {
+    "run:locally": "docker run --rm -e DOCKER_LAMBDA_STAY_OPEN=1  -p 9001:9001 -v %CD%:/var/task:ro,delegated  lambci/lambda:nodejs12.x packages/handler/index.handler",
+    "run:api": "cd .\\packages\\api && node index",
+    "cdk": "cdk",
+    "clean": "npm run-script delete-modules && rmdir /s /q node_modules && rmdir /s /q cdk.out",
+    "reinstall": "rmdir /s /q node_modules && npm install",
+    "cdk:deploy": "npm run-script bootstrap && cdk deploy",
+    "deploy": "npm run-script bootstrap  && cdk deploy '*'",
+    "build": "lerna exec -- npm install",
+    "bootstrap": "lerna bootstrap",
+    "delete-modules": "lerna exec -- rm -rf ./node_modules",
+    "test:mac": "cd ./packages/test; npm test",
+    "test": "cd .\\packages\\test && npm test"
+  },
+  "devDependencies": {
+    "dotenv": "^8.2.0",
+    "lerna": "^3.20.2"
+  },
+  "dependencies": {
+    "@aws-cdk/aws-apigateway": "^1.36.1",
+    "@aws-cdk/aws-dynamodb": "^1.36.1",
+    "@aws-cdk/aws-iam": "^1.36.1",
+    "@aws-cdk/aws-lambda": "^1.36.1",
+    "@aws-cdk/aws-lambda-event-sources": "^1.36.1",
+    "@aws-cdk/core": "^1.36.1",
+    "aws-cdk": "^1.36.1"
+  }
+}
