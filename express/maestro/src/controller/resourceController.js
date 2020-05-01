@@ -18,6 +18,21 @@ const s3 = new AWS.S3();
 
 const sharp = require('sharp');
 
+var storage = multer.memoryStorage({
+  destination: function (req, file, callback) {
+    callback(null, '');
+  }
+});
+
+let multipleUpload = multer({ storage: storage }).array('image');
+
+router.post("/upload", auth, (req, res, next) => {
+
+  console.log(req);
+
+  res.send(JSON.stringify({ msg: 'ok' }));
+});
+
 
 router.get("/getResourcesByMemberUuid", auth, async (req, res, next) => {
   // console.log("Get Resources called")
@@ -39,23 +54,26 @@ router.get("/getResourcesByMemberUuid", auth, async (req, res, next) => {
     //add preSingedUrl to access private data
 
     //TODO disabled until we fix the sharp issue
-    // res.preSignedUrlForThumbnail = s3.getSignedUrl('getObject', {
-    //   Bucket: res.info.transforms.filter(info => info.id == 'thumbnail')[0].bucket,
-    //   Key: res.info.transforms.filter(info => info.id == 'thumbnail')[0].key,
-    //   Expires: 60 * 5
-    // });
+    if (res.info.transforms && res.info.transforms.length > 0) {
+      res.preSignedUrlForThumbnail = s3.getSignedUrl('getObject', {
+        Bucket: res.info.transforms.filter(info => info.id == 'thumbnail')[0].bucket,
+        Key: res.info.transforms.filter(info => info.id == 'thumbnail')[0].key,
+        Expires: 60 * 5
+      });
+
+      res.preSignedUrlForOriginal = s3.getSignedUrl('getObject', {
+        Bucket: res.info.transforms.filter(info => info.id == 'original')[0].bucket,
+        Key: res.info.transforms.filter(info => info.id == 'original')[0].key,
+        Expires: 60 * 5
+      });
+    }
+
 
     // res.preSignedUrlForOriginal = s3.getSignedUrl('getObject', {
-    //   Bucket: res.info.transforms.filter(info => info.id == 'original')[0].bucket,
-    //   Key: res.info.transforms.filter(info => info.id == 'original')[0].key,
+    //   Bucket: res.info.bucket,
+    //   Key: res.info.key,
     //   Expires: 60 * 5
     // });
-
-    res.preSignedUrlForOriginal = s3.getSignedUrl('getObject', {
-      Bucket: res.info.bucket,
-      Key: res.info.key,
-      Expires: 60 * 5
-    });
 
     resources.push(res);
   });
@@ -102,7 +120,7 @@ const uploadThumbNail = multer({
     },
     shouldTransform: function (req, file, cb) {
       //where to transform file or not
-      cb(null, false);
+      cb(null, true);
     },
     transforms: [
       {
@@ -132,9 +150,6 @@ const uploadThumbNail = multer({
 
 //create resource
 router.post("/addResource", auth, uploadThumbNail.array('image'), async (req, res, next) => {
-  console.log(req);
-  console.log(req.body)
-  console.log(req.files);
   let promises = [];
   for (const file of req.files) {
     let resource = {};
@@ -170,10 +185,13 @@ router.delete("/deleteResource", auth, async (req, res, next) => {
   if (response) {
     let bucket = '';
     let listOfObjects = [];
-    response.Attributes.info.transforms.forEach(transform => {
-      bucket = transform.bucket;
-      listOfObjects.push({ Key: transform.key });
-    });
+
+    if (response.Attributes.info.transforms && response.Attributes.info.transforms.length > 0) {
+      response.Attributes.info.transforms.forEach(transform => {
+        bucket = transform.bucket;
+        listOfObjects.push({ Key: transform.key });
+      });
+    }
     let params = {
       Bucket: bucket,
       Delete: {

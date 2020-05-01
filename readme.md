@@ -33,3 +33,8 @@ npm run-script run:locally:mac
 	"body": "{\"respone\":\"Hello from mock\"}"
 }
 ```
+
+### Zip current folder without creating subfolder 
+```
+zip -r -D zipped.zip *
+```

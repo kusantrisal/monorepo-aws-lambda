@@ -13,7 +13,8 @@ module.exports = class SampleFunctionConstruct extends core.Construct {
         lambdaFunction = new lambda.Function(this, 'functionConstructname', {
             functionName: 'sampleApi',
             runtime: lambda.Runtime.NODEJS_12_X,
-            code: new lambda.AssetCode(path.resolve(`${path.resolve()}/packages/handler`)),
+            //        code: new lambda.AssetCode(path.resolve(`${path.resolve()}/packages/handler`)),
+            code: new lambda.AssetCode(path.resolve(`${path.resolve()}/express/maestro`)),
             handler: 'index.handler',
             role: role,
             timeout: core.Duration.seconds(300),

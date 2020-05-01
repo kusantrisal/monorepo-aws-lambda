@@ -20,4 +20,9 @@ router.get("/getMemberUuidFromAuthServer", auth, async (req, res, next) => {
     }
 });
 
+
+router.get("/health", async (req, res, next) => {
+    res.send(JSON.stringify({ status: 'up' }));
+});
+
 module.exports = router;

@@ -2,9 +2,11 @@
   "name": "root",
   "private": true,
   "scripts": {
-    "run":"npm run-script run:angular & npm run-script run:express",
+    "dockerbuild": "cd .\\express\\maestro && rm -rf /node_modules/sharp && docker run -v %CD%:/var/task lambci/lambda:build-nodejs12.x npm install sharp",
+    "run": "npm run-script run:angular & npm run-script run:express",
     "run:angular": "cd .\\angular\\frontend && npm start",
     "run:express": "cd .\\express\\maestro && npm run-script start",
+    "run:express:docker": "docker run --rm -e DOCKER_LAMBDA_STAY_OPEN=1 -p 9001:9001 -v %CD%:/var/task:ro,delegated  lambci/lambda:nodejs12.x express/maestro/index.handler",
     "run:locally:windows": "docker run --rm -e DOCKER_LAMBDA_STAY_OPEN=1 -p 9001:9001 -v %CD%:/var/task:ro,delegated  lambci/lambda:nodejs12.x packages/handler/index.handler",
     "run:locally:mac": "docker run --rm -d -e DOCKER_LAMBDA_STAY_OPEN=1  -p 9001:9001 -v '$PWD':/var/task:ro,delegated  lambci/lambda:nodejs12.x packages/handler/index.handler",
     "run:api": "cd .\\packages\\api && node index",

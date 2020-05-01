@@ -33,8 +33,8 @@
                 fxFlex.sm="50" fxFlex.xs="100" fxLayout="column" style="padding: 5px;">
                 <!-- cards here -->
                 <mat-card class="mat-elevation-z1">
-                    <!-- TODO needs to be changed to preSignedUrlForThumbnail -->
-                    <img mat-card-image [src]="resource.preSignedUrlForOriginal"
+                    <!-- TODO needs to be changed to preSignedUrlForOriginal/ preSignedUrlForThumbnail -->
+                    <img mat-card-image [src]="resource.preSignedUrlForThumbnail"
                         (click)="openDialog(resource)" />
                     <!-- <mat-card-title> {{ resource.createDate }} </mat-card-title> -->
                     <!-- <mat-card-content> {{  resource.createDate}} </mat-card-content> -->
