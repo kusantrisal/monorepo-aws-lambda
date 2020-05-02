@@ -11,7 +11,7 @@ module.exports = class SampleFunctionConstruct extends core.Construct {
         super(scope, id, props);
 
         lambdaFunction = new lambda.Function(this, 'functionConstructname', {
-            functionName: 'sampleApi',
+            functionName: 'maestro-be',
             runtime: lambda.Runtime.NODEJS_12_X,
             //        code: new lambda.AssetCode(path.resolve(`${path.resolve()}/packages/handler`)),
             code: new lambda.AssetCode(path.resolve(`${path.resolve()}/express/maestro`)),
@@ -34,7 +34,8 @@ module.exports = class SampleFunctionConstruct extends core.Construct {
         new api.LambdaRestApi(this, 'sampleApiConstruct', {
             restApiName: 'sampleApi',
             handler: lambdaFunction,
-            description: 'desc'
+            description: 'desc',
+            binaryMediaTypes: ['*/*']
         });
     }
 

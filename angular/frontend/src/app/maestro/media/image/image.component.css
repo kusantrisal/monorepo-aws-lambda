@@ -1,7 +1,9 @@
 .custom-dropzone {
   /* height: 1000px;
   min-height: 100%; */
-  min-width: 99%;
+  height: auto;
+  min-height: 100px;
+  min-width: 98%;
   border: 0.2px dashed rgb(88, 88, 88);
   /* background: rgb(255, 255, 255);
   color: rgb(0, 0, 0);

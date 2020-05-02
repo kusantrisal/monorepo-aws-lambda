@@ -1,12 +1,15 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { HttpService } from '../../service/http.service';
-import { HttpEventType } from '@angular/common/http';
+import { HttpEventType, HttpEvent, HttpClient } from '@angular/common/http';
 import { AddResource } from '../../actions/member.actions';
 import { Store, Select } from '@ngxs/store';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { first } from 'rxjs/operators';
 import { MediaObserver } from '@angular/flex-layout';
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Observable, Subscription } from 'rxjs';
+import { of, combineLatest, forkJoin } from 'rxjs';
+import { map, mergeAll } from 'rxjs/operators';
 
 export interface DialogData {
   url: string;
@@ -31,14 +34,15 @@ export class ImageComponent implements OnInit {
     private store: Store,
     private _snackBar: MatSnackBar,
     private mediaObserver: MediaObserver,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private httpClient: HttpClient
   ) { }
 
   ngOnInit(): void {
     this.mediaObserver.asObservable().subscribe(
       change => {
         change.forEach((v) => {
-          this.screenSize= v.mqAlias;
+          this.screenSize = v.mqAlias;
         });
       });
     this.getResoucesByMemberUuid();
@@ -60,26 +64,68 @@ export class ImageComponent implements OnInit {
       err => console.log(err)
     );
   }
-  onSubmit() {
-    this.uploadedPercent = 0;
-    if (this.files.length > 0) {
-      this.httpService.addResource(this.files).subscribe(
-        events => {
-          if (events.type === HttpEventType.UploadProgress) {
-            //   console.log(Math.round(events.loaded / events.total * 100) + '%');
-            this.uploadedPercent = Math.round(events.loaded / events.total * 100);
 
-          } else if (events.type === HttpEventType.Response) {
-            this._snackBar.open('File uploaded', 'Enjoy', {
+  onSubmit() {
+
+    let combine = [];
+    this.uploadedPercent = 0;
+
+    if (this.files.length > 0) {
+      this.files.forEach(file => {
+        combine.push(this.httpService.addResource(file));
+      });
+
+      forkJoin(combine).subscribe(
+        events => {
+          let uploaded = [];
+          let failed = [];
+
+          events.forEach(event => {
+            console.log(event['status'])
+            if (event['status'] == '200') {
+              uploaded.push(event['body'][0]['info']['originalname']);
+
+            } else {
+              failed.push(event['body'][0]['info']['originalname']);
+            }
+          });
+
+          if (uploaded.length > 0) {
+            this._snackBar.open('Files uploaded', 'Successful', {
               duration: 4000,
             });
-            this.files = [];
-            this.uploadedPercent = 0;
-            this.getResoucesByMemberUuid();
           }
 
-        }
+          if (failed.length > 0) {
+            this._snackBar.open('Failed to load', 'Failed', {
+              duration: 4000,
+            });
+          }
+
+
+          this.files = [];
+
+
+          this.getResoucesByMemberUuid();
+          // {
+          //   if (events.type === HttpEventType.UploadProgress) {
+          //     //   console.log(Math.round(events.loaded / events.total * 100) + '%');
+          //     this.uploadedPercent = Math.round(events.loaded / events.total * 100);
+
+          //   } else if (events.type === HttpEventType.Response) {
+          //     this._snackBar.open('File uploaded', 'Enjoy', {
+          //       duration: 4000,
+          //     });
+          //     this.files = [];
+          //     this.uploadedPercent = 0;
+          //     this.getResoucesByMemberUuid();
+          //   }
+
+          // }
+        },
+        err => console.log(err)
       );
+      //  console.log(observablesList)
     }
   }
 
@@ -111,7 +157,7 @@ export class ImageComponent implements OnInit {
     const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
       width: 'auto',
       height: 'auto',
-      data: { url: resource.preSignedUrlForOriginal, createDate: resource.createDate}
+      data: { url: resource.preSignedUrlForOriginal, createDate: resource.createDate }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -142,7 +188,7 @@ export class DialogOverviewExampleDialog {
 
   constructor(
     public dialogRef: MatDialogRef<DialogOverviewExampleDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData) {}
+    @Inject(MAT_DIALOG_DATA) public data: DialogData) { }
 
   onNoClick(): void {
     this.dialogRef.close();

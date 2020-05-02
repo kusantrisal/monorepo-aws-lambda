@@ -4,7 +4,6 @@ import { ProfileComponent } from './profile/profile.component';
 import { NgxsModule } from '@ngxs/store';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { MemberState } from './state/member.state';
-//import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { ResourceComponent } from './resource/resource.component';
 import { MaterialModule } from '../material/material.module';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -13,6 +12,7 @@ import { FormsModule } from '@angular/forms';
 import { ImageComponent } from './media/image/image.component';
 import { VideoComponent } from './media/video/video.component';
 import { NgxDropzoneModule } from 'ngx-dropzone';
+
 
 @NgModule({
   declarations: [ProfileComponent, ResourceComponent, ImageComponent, VideoComponent],
@@ -27,7 +27,6 @@ import { NgxDropzoneModule } from 'ngx-dropzone';
       MemberState
     ]),
     NgxsReduxDevtoolsPluginModule.forRoot(),
-   // NgxsLoggerPluginModule.forRoot()
   ],
   exports: [
     ProfileComponent

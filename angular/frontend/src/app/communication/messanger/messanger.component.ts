@@ -21,7 +21,7 @@ export class MessangerComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
-    this.connectWs();
+ //   this.connectWs();
   }
 
   ngOnDestroy(): void {

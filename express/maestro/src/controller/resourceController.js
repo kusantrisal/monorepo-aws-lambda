@@ -2,36 +2,17 @@ const express = require("express");
 const moment = require('moment');
 const Joi = require("joi");
 const uuid = require('uuid');
-const resourceRepo = require('../repository/resourceRepo');
-const thumbnailService = require('../service/thumbnailService');
-const constant = require('./../constant/constant');
-const auth = require("../middleware/authInterceptor");
-const router = express.Router();
 const multer = require('multer');
 const multerS3 = require('multer-s3-transform');
+const sharp = require('sharp');
 const { v4: uuidv4 } = require('uuid');
-
-const fs = require('fs');
+const resourceRepo = require('../repository/resourceRepo');
+const auth = require("../middleware/authInterceptor");
 const AWS = require('aws-sdk');
 AWS.config.update({ region: 'us-east-1' });
+
+const router = express.Router();
 const s3 = new AWS.S3();
-
-const sharp = require('sharp');
-
-var storage = multer.memoryStorage({
-  destination: function (req, file, callback) {
-    callback(null, '');
-  }
-});
-
-let multipleUpload = multer({ storage: storage }).array('image');
-
-router.post("/upload", auth, (req, res, next) => {
-
-  console.log(req);
-
-  res.send(JSON.stringify({ msg: 'ok' }));
-});
 
 
 router.get("/getResourcesByMemberUuid", auth, async (req, res, next) => {
@@ -68,13 +49,6 @@ router.get("/getResourcesByMemberUuid", auth, async (req, res, next) => {
       });
     }
 
-
-    // res.preSignedUrlForOriginal = s3.getSignedUrl('getObject', {
-    //   Bucket: res.info.bucket,
-    //   Key: res.info.key,
-    //   Expires: 60 * 5
-    // });
-
     resources.push(res);
   });
 
@@ -103,20 +77,13 @@ const uploadThumbNail = multer({
       cb(null, req.userDate.memberUuid + '/' + req.userDate.resourceUuid + '/original/' + file.originalname); //use Date.now() for unique file keys
     },
     contentType: function (req, file, cb) {
-      if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+      if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png' || file.mimetype === 'image/jpg') {
         cb(null, 'image/jpeg');
       } else if (file.mimetype === 'video/mp4') {
         cb(null, 'video/mp4');
       } else {
         cb(null, file.mimetype);
       }
-    },
-    limits: {
-      fileSize: 1000,
-      files: 10
-    },
-    metadata: function (req, file, cb) {
-      cb(null, { fieldName: file.fieldname });
     },
     shouldTransform: function (req, file, cb) {
       //where to transform file or not
@@ -129,7 +96,6 @@ const uploadThumbNail = multer({
           cb(null, req.userDate.memberUuid + '/' + req.userDate.resourceUuid + '/original/' + file.originalname)
         },
         transform: function (req, file, cb) {
-          //Perform desired transformations
           cb(null, sharp().jpeg({ progressive: true, force: false }));
         }
       },
@@ -139,7 +105,6 @@ const uploadThumbNail = multer({
           cb(null, req.userDate.memberUuid + '/' + req.userDate.resourceUuid + '/thumbnail/' + file.originalname)
         },
         transform: function (req, file, cb) {
-          //Perform desired transformations
           cb(null, sharp()
             .resize(500, 300)
             .jpeg())
@@ -151,6 +116,7 @@ const uploadThumbNail = multer({
 //create resource
 router.post("/addResource", auth, uploadThumbNail.array('image'), async (req, res, next) => {
   let promises = [];
+  let responses = [];
   for (const file of req.files) {
     let resource = {};
     let resourceUuid;
@@ -166,6 +132,7 @@ router.post("/addResource", auth, uploadThumbNail.array('image'), async (req, re
     resource.resourceUuid = resourceUuid;
     resource.createDate = Date.now();
     resource.info = file
+    responses.push(resource);
     promises.concat(resourceRepo.createResource(resource));
   }
 
@@ -174,9 +141,10 @@ router.post("/addResource", auth, uploadThumbNail.array('image'), async (req, re
   if (response.message) {
     return next(new Error(response.message));
   }
-  res.send(response);
+  res.send(responses);
 
 });
+
 
 router.delete("/deleteResource", auth, async (req, res, next) => {
 

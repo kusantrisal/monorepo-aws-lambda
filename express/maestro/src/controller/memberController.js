@@ -81,7 +81,7 @@ router.get("/getMember", auth, async (req, res, next) => {
     res.statusCode = 404;
     return next(new Error(`Unable to fetch member ${req.userDate.memberUuid}`));
   }
-  console.log(items)
+  // console.log(items);
   let member = items.Items[0];
   member.createDate = moment.utc(member.createDate).format("YYYY-MM-DD HH:mm:ss a");
   member.lastUpdated = moment.utc(member.lastUpdated).format("YYYY-MM-DD HH:mm:ss a");

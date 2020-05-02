@@ -1,23 +1,37 @@
-<div fxLayout="column" >
-  <div fxLayout="row">
-    <mat-toolbar color="primary" class="navbar fixed-header">
+<div fxLayout="column">
+
+  <div>
+
+    <mat-toolbar color="primary" class="navbar">
+
       <div>
         <span routerLink="/home" routerLinkActive="active">Home</span>
         <span routerLink="/secure" routerLinkActive="active" *ngIf="authService.isAuthenticated()">Secure</span>
-        <span routerLink="/maestro" routerLinkActive="active" *ngIf="authService.isAuthenticated()">Maestro</span>
       </div>
+
       <div>
         <span routerLink="/signin" routerLinkActive="active" *ngIf="!authService.isAuthenticated()">Sign in</span>
         <span routerLink="/signup" routerLinkActive="active" *ngIf="!authService.isAuthenticated()">Sign up</span>
-        <span (click)="authService.logout()" routerLinkActive="active"
-          *ngIf="authService.isAuthenticated()">Logout</span>
+
+        <div *ngIf="authService.isAuthenticated()">
+          <button mat-mini-fab color="accent" [matMenuTriggerFor]="menu">{{memberInfoLoadedFromMaestro}}
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item><span routerLink="/maestro" routerLinkActive="active">Account</span></button>
+            <button mat-menu-item> <span (click)="authService.logout()" routerLinkActive="active">Logout</span></button>
+          </mat-menu>
+        </div>
       </div>
+
     </mat-toolbar>
+
   </div>
 
   <div>
     <router-outlet></router-outlet>
   </div>
-  
-  <app-messanger *ngIf="authService.isAuthenticated()"></app-messanger>
+
+  <div>
+    <app-messanger *ngIf="authService.isAuthenticated()"></app-messanger>
+  </div>
 </div>

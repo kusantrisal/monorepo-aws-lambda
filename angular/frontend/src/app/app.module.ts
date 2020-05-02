@@ -16,6 +16,9 @@ import { HomeComponent } from './home/home.component';
 import { FormsModule } from '@angular/forms';
 import { MaestroModule } from './maestro/maestro.module';
 import { CommunicationModule } from './communication/communication.module';
+// import { NgxsModule } from '@ngxs/store';
+// import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
+// import { MemberState } from './maestro/state/member.state';
 
 
 @NgModule({
@@ -35,12 +38,17 @@ import { CommunicationModule } from './communication/communication.module';
     HttpClientModule,
     FormsModule,
     MaestroModule,
-    CommunicationModule
+    CommunicationModule,
+    // NgxsModule.forRoot([
+    //   MemberState
+    // ]),
+    // NgxsReduxDevtoolsPluginModule.forRoot(),
   ],
   providers: [AuthService, AuthGuard, {provide: HTTP_INTERCEPTORS, useClass: InterceptorService, multi: true}],
   bootstrap: [AppComponent],
   exports: [
-    MaterialModule
+    MaterialModule,
+  //  MemberState
   ]
 })
 export class AppModule { }
