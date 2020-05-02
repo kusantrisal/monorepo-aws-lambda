@@ -64,9 +64,34 @@ const getResourcesByMemberUuid = async (memberUuid) => {
     }
 }
 
+const updateResourceValue = async (memberUuid, resourceUuid, key, value) => {
+
+    try {
+        let params = {
+            TableName: process.env.RESOURCE || 'RESOURCE',
+            Key: {
+                'resourceUuid': resourceUuid,
+                'memberUuid': memberUuid
+            },
+            UpdateExpression: "set #key = :value",
+            ExpressionAttributeNames: {
+                "#key": key
+            },
+            ExpressionAttributeValues: {
+                ":value": value
+            },
+            ReturnValues: 'ALL_NEW'
+        };
+        return await dynamoClient.update(params).promise();
+    } catch (e) {
+        return e;
+    }
+}
+
 module.exports = {
     createResource,
     getResourceByResourceUuid,
     deleteResource,
-    getResourcesByMemberUuid
+    getResourcesByMemberUuid,
+    updateResourceValue
 }

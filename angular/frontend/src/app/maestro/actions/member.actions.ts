@@ -11,6 +11,21 @@ export class RemoveMember {
 }
 
 export class AddResource {
-    static readonly type = '[MEMBER] AddResource';
+    static readonly type = '[RESOURCE] AddResource';
+    constructor(public payload: Object[]) { }
+}
+
+export class UpdateResource {
+    static readonly type = '[RESOURCE] UpdateResource';
+    constructor(public payload: Object) { }
+}
+
+export class DeleteResource {
+    static readonly type = '[RESOURCE] DeleteResource';
+    constructor(public payload: Object) { }
+}
+
+export class RefreshResource {
+    static readonly type = '[RESOURCE] RefreshResource';
     constructor(public payload: Object[]) { }
 }

@@ -1,7 +1,6 @@
-<div fxLayout="column">
-
+<div fxLayout="column" >
+ 
   <div>
-
     <mat-toolbar color="primary" class="navbar">
 
       <div>
@@ -22,16 +21,15 @@
           </mat-menu>
         </div>
       </div>
-
     </mat-toolbar>
-
   </div>
 
-  <div>
+  <div  >
     <router-outlet></router-outlet>
   </div>
 
-  <div>
-    <app-messanger *ngIf="authService.isAuthenticated()"></app-messanger>
-  </div>
 </div>
+
+<!-- <div>
+    <app-messanger *ngIf="authService.isAuthenticated()"></app-messanger>
+  </div> -->

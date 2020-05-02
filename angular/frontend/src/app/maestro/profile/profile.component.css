@@ -1,6 +1,9 @@
-.profile-card {
-  height: 100%;
+mat-card {
+  transition: none !important;
+  box-shadow: none !important;
+  border-style: none !important;
 }
+
 .example-header-image {
   background-size: contain;
 }
@@ -24,3 +27,4 @@
 mat-card-header{
   justify-content: center;
 }
+

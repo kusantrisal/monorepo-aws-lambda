@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { HttpService } from '../../service/http.service';
 import { HttpEventType, HttpEvent, HttpClient } from '@angular/common/http';
-import { AddResource } from '../../actions/member.actions';
+import { AddResource, UpdateResource, DeleteResource, RefreshResource } from '../../actions/member.actions';
 import { Store, Select } from '@ngxs/store';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { first } from 'rxjs/operators';
@@ -10,6 +10,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { Observable, Subscription } from 'rxjs';
 import { of, combineLatest, forkJoin } from 'rxjs';
 import { map, mergeAll } from 'rxjs/operators';
+import { FormBuilder, Validators } from '@angular/forms';
 
 export interface DialogData {
   url: string;
@@ -29,13 +30,17 @@ export class ImageComponent implements OnInit {
   uploadedPercent = 0;
   images = [];
   screenSize: string;
+  formGroup = this.fb.group({
+    resourceUuid: [null, Validators.required],
+    description: [null, Validators.required]
+  });
   constructor(
     private httpService: HttpService,
     private store: Store,
     private _snackBar: MatSnackBar,
     private mediaObserver: MediaObserver,
     public dialog: MatDialog,
-    private httpClient: HttpClient
+    private fb: FormBuilder
   ) { }
 
   ngOnInit(): void {
@@ -49,18 +54,32 @@ export class ImageComponent implements OnInit {
   }
 
   onSelect(event) {
-    console.log(event);
+    //console.log(event);
     this.files.push(...event.addedFiles);
   }
 
   onRemove(event) {
-    console.log(event);
+   // console.log(event);
     this.files.splice(this.files.indexOf(event), 1);
   }
+
   delete(resourceUuid) {
-    console.log(resourceUuid);
+    //console.log(resourceUuid);
     this.httpService.deleteResource(resourceUuid).subscribe(
-      res => this.getResoucesByMemberUuid(),
+      res => {
+        this.store.dispatch([new DeleteResource(res)]);
+      },
+      err => console.log(err)
+    );
+  }
+
+  makePublic(resourceUuid, allowAccess) {
+   // console.log(resourceUuid);
+    this.httpService.makePublic(resourceUuid, allowAccess).subscribe(
+      res => {
+        // res['createDate'] = new Date(res['createDate'])
+        this.store.dispatch([new UpdateResource(res)]);
+      },
       err => console.log(err)
     );
   }
@@ -83,10 +102,10 @@ export class ImageComponent implements OnInit {
           events.forEach(event => {
             console.log(event['status'])
             if (event['status'] == '200') {
-              uploaded.push(event['body'][0]['info']['originalname']);
+              uploaded.push(event['body'][0]);
 
             } else {
-              failed.push(event['body'][0]['info']['originalname']);
+              failed.push(event['body'][0]);
             }
           });
 
@@ -105,7 +124,7 @@ export class ImageComponent implements OnInit {
 
           this.files = [];
 
-
+          this.store.dispatch([new AddResource(uploaded)]);
           this.getResoucesByMemberUuid();
           // {
           //   if (events.type === HttpEventType.UploadProgress) {
@@ -142,12 +161,12 @@ export class ImageComponent implements OnInit {
   }
 
   addResourcesToStore(resources) {
-    resources.map(res => {
-      let oldRes = res;
-      oldRes.createDate = new Date(res.createDate)
-      return oldRes;
-    })
-    this.store.dispatch([new AddResource(resources)]);
+    // resources.map(res => {
+    //   let oldRes = res;
+    //   oldRes.createDate = new Date(res.createDate)
+    //   return oldRes;
+    // })
+    this.store.dispatch([new RefreshResource(resources)]);
   }
 
   animal: string;
@@ -161,7 +180,7 @@ export class ImageComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
+    //  console.log('The dialog was closed');
       this.animal = result;
     });
   }

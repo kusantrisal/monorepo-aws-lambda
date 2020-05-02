@@ -1,4 +1,7 @@
-<div fxLayout="column" style="background-color: rgb(255, 255, 255);">
+<mat-tab-group mat-align-tabs="center" color="accent">
+
+<mat-tab  label="Photo"> 
+<div fxLayout="column" class="example-large-box">
 
 
     <div class="custom-dropzone" ngx-dropzone [accept]="'image/*'" (change)="onSelect($event)">
@@ -17,33 +20,85 @@
         </ngx-dropzone-image-preview>
 
     </div>
+    <div>
+        <button mat-raised-button color="accent" *ngIf="files.length" (click)="onSubmit()"
+            style="width: 100%;">Upload</button>
 
-    <button mat-raised-button color="accent" *ngIf="files.length" (click)="onSubmit()"
-        style="width: 100%;">Upload</button>
-
-    <!-- {{screenSize}} -->
-    <button mat-icon-button (click)="getResoucesByMemberUuid()">
-        <mat-icon>refresh</mat-icon>
-    </button>
-
-    <div fxFlex fxLayout="column" fxLayoutGap="10px" style="height: 100vh;">
+        <!-- {{screenSize}} -->
+        <button mat-icon-button (click)="getResoucesByMemberUuid()">
+            <mat-icon>refresh</mat-icon>
+        </button>
+    </div>
+    <div fxFlex fxLayout="column" fxLayoutGap="10px" style="height: 100%;">
         <div fxLayout="row wrap">
             <!-- loop over the cardList and show the cards -->
-            <div *ngFor="let resource of memberStateResources$ | async; let i = index"  fxFlex.lg="25" fxFlex.md="33"
+            <div *ngFor="let resource of memberStateResources$ | async; let i = index" fxFlex.lg="25" fxFlex.md="33"
                 fxFlex.sm="50" fxFlex.xs="100" fxLayout="column" style="padding: 5px;">
                 <!-- cards here -->
+
                 <mat-card class="mat-elevation-z1">
+
+                    <!-- <button mat-icon-button (click)="delete(resource.resourceUuid)">
+                        <mat-icon>delete</mat-icon>
+                    </button> -->
+
                     <!-- TODO needs to be changed to preSignedUrlForOriginal/ preSignedUrlForThumbnail -->
-                    <img mat-card-image [src]="resource.preSignedUrlForThumbnail"
-                        (click)="openDialog(resource)" />
+
+                    <img mat-card-image [src]="resource.preSignedUrlForThumbnail" (click)="openDialog(resource)" />
+                    <!-- <h3>{{resource.info.originalname}}</h3>
+                    <h5>Uploaded: {{resource.createDate}}</h5>
+                    <h5>Likes: {{resource.likes}}</h5> -->
+
+                    <!-- <form class="example-form" [formGroup]="formGroup">
+                        <input matInput formControlName="resourceUuid" placeholder={{resource.resourceUuid}} hidden>
+                        <mat-form-field class="example-full-width">
+                            <mat-label>Description</mat-label>
+                            <textarea  matInput formControlName="description" placeholder={{resource.description}}></textarea>
+                            <button matSuffix mat-icon-button color="primary">
+                                <mat-icon
+                                    *ngIf="formGroup.controls.description?.pristine || formGroup.controls.description?.status == 'DISABLED'"
+                                    (click)="edit('description')">edit</mat-icon>
+                                <mat-icon
+                                    *ngIf="!formGroup.controls.description?.pristine && formGroup.controls.description?.status == 'VALID'"
+                                    (click)="save('description')">save</mat-icon>
+                            </button>
+                        </mat-form-field>
+                    </form> -->
+
                     <!-- <mat-card-title> {{ resource.createDate }} </mat-card-title> -->
                     <!-- <mat-card-content> {{  resource.createDate}} </mat-card-content> -->
                     <!-- {{resource | json}} -->
-                    <mat-card-footer>
+                    <mat-chip-list aria-label="Fish selection">
+                        <mat-chip *ngIf="resource.publicAccess; else templateName" color="warn" selected
+                            (click)="makePublic(resource.resourceUuid, !resource.publicAccess)"> public
+                        </mat-chip>
+                        <ng-template #templateName>
+                            <mat-chip color="accent" selected
+                                (click)="makePublic(resource.resourceUuid, !resource.publicAccess)">
+                                private
+                            </mat-chip>
+                        </ng-template>
+                        <mat-chip color="accent" selected>
+                            Likes: {{resource.likes}}
+                        </mat-chip>
+                    </mat-chip-list>
+
+                    <mat-card-actions fxLayout="row" fxLayoutAlign="space-between start">
                         <button mat-icon-button (click)="delete(resource.resourceUuid)">
                             <mat-icon>delete</mat-icon>
                         </button>
-                    </mat-card-footer>
+                        <button mat-icon-button (click)="makePublic(resource.resourceUuid, !resource.publicAccess)">
+                            <mat-icon>share</mat-icon>
+                        </button>
+
+                    </mat-card-actions>
+
+                    <!-- <mat-card-footer fxLayout="row" fxLayoutAlign="space-between start">
+                        <button mat-icon-button (click)="delete(resource.resourceUuid)">
+                            <mat-icon>delete</mat-icon>
+                        </button> 
+                        <p>Likes: {{resource.likes}}</p>
+                    </mat-card-footer> -->
                 </mat-card>
             </div>
         </div>
@@ -78,3 +133,5 @@
     </div> -->
 
 </div>
+</mat-tab>
+</mat-tab-group>

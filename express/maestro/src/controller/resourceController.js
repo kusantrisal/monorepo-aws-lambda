@@ -14,6 +14,32 @@ AWS.config.update({ region: 'us-east-1' });
 const router = express.Router();
 const s3 = new AWS.S3();
 
+router.put('/makePublic', auth, async (req, res, next) => {
+  if (!req.userDate.memberUuid) {
+    return next(new Error('Unknown memberUuid'));
+  }
+
+  let response = await resourceRepo.updateResourceValue(req.userDate.memberUuid, req.body.resourceUuid, req.body.key, req.body.value == 'true');
+  if (!response) {
+    return next(new Error('Unable to make resource public'));
+  };
+
+  response.Attributes.preSignedUrlForThumbnail = s3.getSignedUrl('getObject', {
+    Bucket: response.Attributes.info.transforms.filter(info => info.id == 'thumbnail')[0].bucket,
+    Key: response.Attributes.info.transforms.filter(info => info.id == 'thumbnail')[0].key,
+    Expires: 60 * 5
+  });
+
+  response.Attributes.preSignedUrlForOriginal = s3.getSignedUrl('getObject', {
+    Bucket: response.Attributes.info.transforms.filter(info => info.id == 'original')[0].bucket,
+    Key: response.Attributes.info.transforms.filter(info => info.id == 'original')[0].key,
+    Expires: 60 * 5
+  });
+
+
+  res.send(response.Attributes);
+
+});
 
 router.get("/getResourcesByMemberUuid", auth, async (req, res, next) => {
   // console.log("Get Resources called")
@@ -30,7 +56,7 @@ router.get("/getResourcesByMemberUuid", auth, async (req, res, next) => {
   items.Items.forEach(res => {
     //  console.log(res.info.originalname);
     //change date to readable format
-    // res.createDate = moment.utc(res.createDate).format("YYYY-MM-DD HH:mm:ss a");
+    //  res.createDate = moment.utc(res.createDate).format("YYYY-MM-DD HH:mm:ss a");
     // res.updatedDate = moment.utc(res.updatedDate).format("YYYY-MM-DD HH:mm:ss a");
     //add preSingedUrl to access private data
 
@@ -48,7 +74,6 @@ router.get("/getResourcesByMemberUuid", auth, async (req, res, next) => {
         Expires: 60 * 5
       });
     }
-
     resources.push(res);
   });
 
@@ -128,8 +153,10 @@ router.post("/addResource", auth, uploadThumbNail.array('image'), async (req, re
     }
 
     //  let fileType = file.transforms[0].key.split('/')[2] || file.key.split('/')[2];
+    resource.publicAccess = false
     resource.memberUuid = req.userDate.memberUuid;
     resource.resourceUuid = resourceUuid;
+    resource.likes = 0;
     resource.createDate = Date.now();
     resource.info = file
     responses.push(resource);
@@ -141,6 +168,23 @@ router.post("/addResource", auth, uploadThumbNail.array('image'), async (req, re
   if (response.message) {
     return next(new Error(response.message));
   }
+
+
+  responses.forEach(res => {
+    if (res.info.transforms && res.info.transforms.length > 0) {
+      res.preSignedUrlForThumbnail = s3.getSignedUrl('getObject', {
+        Bucket: res.info.transforms.filter(info => info.id == 'thumbnail')[0].bucket,
+        Key: res.info.transforms.filter(info => info.id == 'thumbnail')[0].key,
+        Expires: 60 * 5
+      });
+
+      res.preSignedUrlForOriginal = s3.getSignedUrl('getObject', {
+        Bucket: res.info.transforms.filter(info => info.id == 'original')[0].bucket,
+        Key: res.info.transforms.filter(info => info.id == 'original')[0].key,
+        Expires: 60 * 5
+      });
+    }
+  })
   res.send(responses);
 
 });
@@ -149,7 +193,7 @@ router.post("/addResource", auth, uploadThumbNail.array('image'), async (req, re
 router.delete("/deleteResource", auth, async (req, res, next) => {
 
   let response = await resourceRepo.deleteResource(req.query.resourceUuid, req.userDate.memberUuid);
-
+  let s3Response;
   if (response) {
     let bucket = '';
     let listOfObjects = [];
@@ -166,14 +210,14 @@ router.delete("/deleteResource", auth, async (req, res, next) => {
         Objects: listOfObjects
       }
     }
-    response = await s3.deleteObjects(params).promise();
+    s3Response = await s3.deleteObjects(params).promise();
   }
 
-  if (response.message) {
-    return next(new Error(response.message));
+  if (s3Response.message) {
+    return next(new Error(s3Response.message));
   }
 
-  res.send(response);
+  res.send(response.Attributes);
 });
 
 //unused

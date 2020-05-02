@@ -10,8 +10,8 @@ import { Member } from '../model/member.model';
 
 //NOTE withCredentials: false will add Bearer token to header
 export class HttpService {
- // MAESTRO_BASE_URL = 'https://t0cb6yv9dg.execute-api.us-east-1.amazonaws.com/prod';
-   MAESTRO_BASE_URL = 'http://localhost:3000';
+  // MAESTRO_BASE_URL = 'https://t0cb6yv9dg.execute-api.us-east-1.amazonaws.com/prod';
+  MAESTRO_BASE_URL = 'http://localhost:3000';
   constructor(private http: HttpClient) { }
 
 
@@ -49,7 +49,7 @@ export class HttpService {
     return this.http.get(this.MAESTRO_BASE_URL + '/resource/getResourcesByMemberUuid', { withCredentials: false, responseType: 'json' });
   }
 
-   addResource(file) {
+  addResource(file) {
     const fd = new FormData();
     fd.append('image', file);
     return this.http.post(this.MAESTRO_BASE_URL + '/resource/addResource', fd, { reportProgress: true, observe: 'events' });
@@ -61,7 +61,14 @@ export class HttpService {
     return this.http.delete(this.MAESTRO_BASE_URL + '/resource/deleteResource', { params: params });
   }
 
+  makePublic(resourceUuid, allowAccess) {
+    const body = new HttpParams()
+      .set('resourceUuid', resourceUuid)
+      .set('key', 'publicAccess')
+      .set('value', allowAccess);
 
+    return this.http.put(this.MAESTRO_BASE_URL + '/resource/makePublic', body);
+  }
 
   //test only
   testApi(): Observable<Object> {

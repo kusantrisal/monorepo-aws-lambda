@@ -13,10 +13,10 @@
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
 $zerotoheroquick-frontend-primary: mat-palette($mat-grey, 900);
-$zerotoheroquick-frontend-accent: mat-palette($mat-green, 300);
+$zerotoheroquick-frontend-accent: mat-palette($mat-green, 500);
 
 // The warn palette is optional (defaults to red).
-$zerotoheroquick-frontend-warn: mat-palette($mat-red, 200);
+$zerotoheroquick-frontend-warn: mat-palette($mat-orange, 500);
 
 // Create the theme object (a Sass map containing all of the palettes).
 $zerotoheroquick-frontend-theme: mat-light-theme($zerotoheroquick-frontend-primary, $zerotoheroquick-frontend-accent, $zerotoheroquick-frontend-warn);

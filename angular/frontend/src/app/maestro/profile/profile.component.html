@@ -1,7 +1,6 @@
 <!-- Display Profile -->
-<div>
 
-  <div fxLayout="row" fxLayoutAlign="center center">
+  <!-- <div fxLayout="row" fxLayoutAlign="center center"> -->
     <!--
       if we want bigger circal of image
       <div>
@@ -9,9 +8,9 @@
         style="border-radius: 50%;width:200px; height: 30em; width: 30em;vertical-align: middle;" alt="Avatar">
     </div>
 <br> -->
-    <div fxFlex="99%">
+    <!-- <div fxFlex="100%"> -->
       <!-- <img class="cover" mat-card-image [src]="getSantizeUrl(memberInfo.profilePicPreSignedUrl)"> -->
-      <mat-card class="profile-card">
+      <mat-card>
         <mat-card-header>
 
           <!-- Avatar -->
@@ -27,6 +26,7 @@
           <mat-card-title>{{memberInfo.firstName + ' ' + memberInfo.lastName}}</mat-card-title>
           <mat-card-subtitle>member since {{memberInfo.createDate}}</mat-card-subtitle>
           <!-- <pre>{{formGroup.value | json}}</pre> -->
+
           <form class="example-form" [formGroup]="formGroup">
 
             <mat-form-field class="example-full-width">
@@ -38,7 +38,6 @@
                 <mat-icon *ngIf="!formGroup.controls.email?.pristine && formGroup.controls.email?.status == 'VALID'"
                   (click)="save('email')">save</mat-icon>
               </button>
-
             </mat-form-field>
 
             <mat-form-field class="example-full-width">
@@ -52,43 +51,28 @@
               </button>
             </mat-form-field>
           </form>
-
+          
 
           <div>
-            <!-- <mat-tab-group mat-stretch-tabs>
-              <mat-tab label="Photos">
-                
-                <app-image></app-image>
-              </mat-tab>
-              <mat-tab label="Resources">
-                <app-resource></app-resource>
-              </mat-tab>
-              <mat-tab label="Videos">
-                <app-video></app-video>
-              </mat-tab>
-            </mat-tab-group> -->
-          
-            <mat-tab-group mat-align-tabs="center">
-              <mat-tab label="Photo" color="accent">
-                <app-image></app-image>
-              </mat-tab>
-              <mat-tab label="Second">Content 2</mat-tab>
-              <mat-tab label="Third">Content 3</mat-tab>
-            </mat-tab-group>
           </div>
-
-
         </mat-card-content>
-        <!-- <div style="text-align: center;"> -->
+
 
 
       </mat-card>
 
+      <app-image></app-image>
 
+      <!-- <mat-tab-group mat-align-tabs="center" >
+        <mat-tab label="Photo" >
+          <app-image></app-image>
+        </mat-tab>
+        <mat-tab label="Second">Content 2</mat-tab>
+        <mat-tab label="Third">Content 3</mat-tab>
+      </mat-tab-group> -->
+    <!-- </div> -->
+  <!-- </div> -->
 
-    </div>
-  </div>
-</div>
 
 <!-- <pre>{{memberInfo | json }}</pre> -->
 
@@ -97,4 +81,3 @@
 <div *ngIf='showResourcesFlag'>
   <app-resource></app-resource>
 </div> -->
-
