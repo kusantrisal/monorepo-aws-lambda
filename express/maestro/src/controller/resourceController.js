@@ -140,6 +140,7 @@ const uploadThumbNail = multer({
 
 //create resource
 router.post("/addResource", auth, uploadThumbNail.array('image'), async (req, res, next) => {
+  console.log(req.body.field)
   let promises = [];
   let responses = [];
   for (const file of req.files) {

@@ -1,77 +1,100 @@
 <!-- Display Profile -->
 
-  <!-- <div fxLayout="row" fxLayoutAlign="center center"> -->
-    <!--
+<!-- <div fxLayout="row" fxLayoutAlign="center center"> -->
+<!--
       if we want bigger circal of image
       <div>
       <img [src]=getSantizeUrl(memberInfo.profilePicPreSignedUrl)
         style="border-radius: 50%;width:200px; height: 30em; width: 30em;vertical-align: middle;" alt="Avatar">
     </div>
 <br> -->
-    <!-- <div fxFlex="100%"> -->
-      <!-- <img class="cover" mat-card-image [src]="getSantizeUrl(memberInfo.profilePicPreSignedUrl)"> -->
-      <mat-card>
-        <mat-card-header>
+<!-- <div fxFlex="100%"> -->
+<!-- <img class="cover" mat-card-image [src]="getSantizeUrl(memberInfo.profilePicPreSignedUrl)"> -->
+<mat-card>
+  <mat-card-header>
 
-          <!-- Avatar -->
-          <!-- <div mat-card-avatar class="example-header-image"
+    <!-- Avatar -->
+    <!-- <div mat-card-avatar class="example-header-image"
             [style.background-image]="'url('+memberInfo.profilePicPreSignedUrl+')'"></div> -->
 
-          <!-- <img class="image-holder" [src]=getSantizeUrl(profilePic) />  -->
-          <!-- <mat-card-title>{{memberInfo.firstName + ' ' + memberInfo.lastName}}</mat-card-title>
+    <!-- <img class="image-holder" [src]=getSantizeUrl(profilePic) />  -->
+    <!-- <mat-card-title>{{memberInfo.firstName + ' ' + memberInfo.lastName}}</mat-card-title>
           <mat-card-subtitle>member since {{memberInfo.createDate}}</mat-card-subtitle> -->
-        </mat-card-header>
+  </mat-card-header>
 
-        <mat-card-content>
-          <mat-card-title>{{memberInfo.firstName + ' ' + memberInfo.lastName}}</mat-card-title>
-          <mat-card-subtitle>member since {{memberInfo.createDate}}</mat-card-subtitle>
-          <!-- <pre>{{formGroup.value | json}}</pre> -->
+  <mat-card-content>
+    <mat-card-title>{{memberInfo.firstName + ' ' + memberInfo.lastName}}</mat-card-title>
+    <mat-card-subtitle>member since {{memberInfo.createDate}}</mat-card-subtitle>
+    <!-- <pre>{{formGroup.value | json}}</pre> -->
 
-          <form class="example-form" [formGroup]="formGroup">
+    <form class="example-form" [formGroup]="formGroup">
 
-            <mat-form-field class="example-full-width">
-              <mat-label>Email</mat-label>
-              <input matInput formControlName="email" placeholder={{memberInfo.email}}>
-              <button matSuffix mat-icon-button color="primary">
-                <mat-icon *ngIf="formGroup.controls.email?.pristine || formGroup.controls.email?.status == 'DISABLED'"
-                  (click)="edit('email')">edit</mat-icon>
-                <mat-icon *ngIf="!formGroup.controls.email?.pristine && formGroup.controls.email?.status == 'VALID'"
-                  (click)="save('email')">save</mat-icon>
-              </button>
-            </mat-form-field>
+      <mat-form-field class="example-full-width">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" placeholder={{memberInfo.email}}>
+        <button matSuffix mat-icon-button color="primary">
+          <mat-icon *ngIf="formGroup.controls.email?.pristine || formGroup.controls.email?.status == 'DISABLED'"
+            (click)="edit('email')">edit</mat-icon>
+          <mat-icon *ngIf="!formGroup.controls.email?.pristine && formGroup.controls.email?.status == 'VALID'"
+            (click)="save('email')">save</mat-icon>
+        </button>
+      </mat-form-field>
 
-            <mat-form-field class="example-full-width">
-              <mat-label>Phone</mat-label>
-              <input matInput formControlName="phone" placeholder={{memberInfo.phone}}>
-              <button matSuffix mat-icon-button color="primary">
-                <mat-icon *ngIf="formGroup.controls.phone?.pristine || formGroup.controls.phone?.status == 'DISABLED'"
-                  (click)="edit('phone')">edit</mat-icon>
-                <mat-icon *ngIf="!formGroup.controls.phone?.pristine && formGroup.controls.phone?.status == 'VALID'"
-                  (click)="save('phone')">save</mat-icon>
-              </button>
-            </mat-form-field>
-          </form>
-          
-
-          <div>
-          </div>
-        </mat-card-content>
+      <mat-form-field class="example-full-width">
+        <mat-label>Phone</mat-label>
+        <input matInput formControlName="phone" placeholder={{memberInfo.phone}}>
+        <button matSuffix mat-icon-button color="primary">
+          <mat-icon *ngIf="formGroup.controls.phone?.pristine || formGroup.controls.phone?.status == 'DISABLED'"
+            (click)="edit('phone')">edit</mat-icon>
+          <mat-icon *ngIf="!formGroup.controls.phone?.pristine && formGroup.controls.phone?.status == 'VALID'"
+            (click)="save('phone')">save</mat-icon>
+        </button>
+      </mat-form-field>
+    </form>
 
 
+    <div>
+    </div>
+  </mat-card-content>
 
-      </mat-card>
 
+
+</mat-card>
+<!-- lazy loading -->
+<mat-tab-group mat-align-tabs="center" color="accent">
+
+  <mat-tab label="Friends">
+    <app-friend></app-friend>
+  </mat-tab>
+
+  <mat-tab label="Post">
+    <ng-template matTabContent>
+      <!-- <app-friend></app-friend> -->
+    </ng-template>
+  </mat-tab>
+
+
+
+  <mat-tab label="Photo">
+    <ng-template matTabContent>
       <app-image></app-image>
+    </ng-template>
+  </mat-tab>
 
-      <!-- <mat-tab-group mat-align-tabs="center" >
+  <mat-tab label="Video">
+    THIS IS Video
+  </mat-tab>
+
+</mat-tab-group>
+<!-- <mat-tab-group mat-align-tabs="center" >
         <mat-tab label="Photo" >
           <app-image></app-image>
         </mat-tab>
         <mat-tab label="Second">Content 2</mat-tab>
         <mat-tab label="Third">Content 3</mat-tab>
       </mat-tab-group> -->
-    <!-- </div> -->
-  <!-- </div> -->
+<!-- </div> -->
+<!-- </div> -->
 
 
 <!-- <pre>{{memberInfo | json }}</pre> -->

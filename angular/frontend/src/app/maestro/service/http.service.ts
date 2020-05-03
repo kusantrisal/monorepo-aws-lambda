@@ -52,6 +52,7 @@ export class HttpService {
   addResource(file) {
     const fd = new FormData();
     fd.append('image', file);
+    fd.append('field','formdata');
     return this.http.post(this.MAESTRO_BASE_URL + '/resource/addResource', fd, { reportProgress: true, observe: 'events' });
   }
 

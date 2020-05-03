@@ -9,13 +9,14 @@ import { MaterialModule } from '../material/material.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule } from '@angular/forms';
-import { ImageComponent } from './media/image/image.component';
-import { VideoComponent } from './media/video/video.component';
+import { ImageComponent } from './content/image/image.component';
+import { VideoComponent } from './content/video/video.component';
 import { NgxDropzoneModule } from 'ngx-dropzone';
-
+import { FriendComponent } from './content/friend/friend.component';
+import { FilterPipe } from './content/friend/pipe/filter.pipe';
 
 @NgModule({
-  declarations: [ProfileComponent, ResourceComponent, ImageComponent, VideoComponent],
+  declarations: [ProfileComponent, ResourceComponent, ImageComponent, VideoComponent, FriendComponent, FilterPipe],
   imports: [
     CommonModule,
     MaterialModule,
@@ -27,6 +28,7 @@ import { NgxDropzoneModule } from 'ngx-dropzone';
       MemberState
     ]),
     NgxsReduxDevtoolsPluginModule.forRoot(),
+
   ],
   exports: [
     ProfileComponent

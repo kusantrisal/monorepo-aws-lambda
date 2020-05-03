@@ -16,6 +16,7 @@ import { HomeComponent } from './home/home.component';
 import { FormsModule } from '@angular/forms';
 import { MaestroModule } from './maestro/maestro.module';
 import { CommunicationModule } from './communication/communication.module';
+
 // import { NgxsModule } from '@ngxs/store';
 // import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 // import { MemberState } from './maestro/state/member.state';
@@ -26,7 +27,7 @@ import { CommunicationModule } from './communication/communication.module';
     AppComponent,
     routingCompoments,
     SecureComponent,
-    HomeComponent
+    HomeComponent,
   ],
   imports: [
     BrowserModule,
@@ -38,17 +39,13 @@ import { CommunicationModule } from './communication/communication.module';
     HttpClientModule,
     FormsModule,
     MaestroModule,
-    CommunicationModule,
-    // NgxsModule.forRoot([
-    //   MemberState
-    // ]),
-    // NgxsReduxDevtoolsPluginModule.forRoot(),
+    CommunicationModule
   ],
   providers: [AuthService, AuthGuard, {provide: HTTP_INTERCEPTORS, useClass: InterceptorService, multi: true}],
   bootstrap: [AppComponent],
   exports: [
     MaterialModule,
-  //  MemberState
+
   ]
 })
 export class AppModule { }
