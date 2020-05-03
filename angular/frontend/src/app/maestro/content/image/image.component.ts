@@ -11,11 +11,13 @@ import { Observable, Subscription } from 'rxjs';
 import { of, combineLatest, forkJoin } from 'rxjs';
 import { map, mergeAll } from 'rxjs/operators';
 import { FormBuilder, Validators } from '@angular/forms';
+import {MatBottomSheet, MatBottomSheetRef} from '@angular/material/bottom-sheet';
 
 export interface DialogData {
   url: string;
   createDate: string;
 }
+
 
 @Component({
   selector: 'app-image',
@@ -40,7 +42,8 @@ export class ImageComponent implements OnInit {
     private _snackBar: MatSnackBar,
     private mediaObserver: MediaObserver,
     public dialog: MatDialog,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private _bottomSheet: MatBottomSheet
   ) { }
 
   ngOnInit(): void {
@@ -51,6 +54,10 @@ export class ImageComponent implements OnInit {
         });
       });
     this.getResoucesByMemberUuid();
+  }
+
+  openBottomSheet(): void {
+    this._bottomSheet.open(BottomSheetOverviewExampleSheet);
   }
 
   onSelect(event) {
@@ -213,4 +220,17 @@ export class DialogOverviewExampleDialog {
     this.dialogRef.close();
   }
 
+}
+
+@Component({
+  selector: 'bottom-sheet-overview-example-sheet',
+  templateUrl: 'bottom-sheet-overview-example-sheet.html',
+})
+export class BottomSheetOverviewExampleSheet {
+  constructor(private _bottomSheetRef: MatBottomSheetRef<BottomSheetOverviewExampleSheet>) {}
+
+  openLink(event: MouseEvent): void {
+    this._bottomSheetRef.dismiss();
+    event.preventDefault();
+  }
 }

@@ -25,6 +25,9 @@
         <button mat-icon-button (click)="getResoucesByMemberUuid()">
             <mat-icon>refresh</mat-icon>
         </button>
+
+        <button mat-flat-button (click)="openBottomSheet()">Albums</button>
+
     </div>
     <div fxFlex fxLayout="column" fxLayoutGap="10px" style="height: 100%;">
         <div fxLayout="row wrap">
@@ -67,26 +70,61 @@
                     <!-- {{resource | json}} -->
                     <mat-chip-list aria-label="Fish selection">
                         <mat-chip *ngIf="resource.publicAccess; else templateName" color="warn" selected
-                            (click)="makePublic(resource.resourceUuid, !resource.publicAccess)"> public
+                            matTooltip="Visibility" (click)="makePublic(resource.resourceUuid, !resource.publicAccess)">
+                            public
                         </mat-chip>
                         <ng-template #templateName>
-                            <mat-chip color="accent" selected
+                            <mat-chip color="accent" selected matTooltip="Visibility"
                                 (click)="makePublic(resource.resourceUuid, !resource.publicAccess)">
-                                private
+                                Friends Only
                             </mat-chip>
                         </ng-template>
                         <mat-chip color="accent" selected>
                             Likes: {{resource.likes}}
                         </mat-chip>
+                        <mat-chip color="accent" selected>
+                            Album: {{resource.likes}}
+                        </mat-chip>
                     </mat-chip-list>
 
-                    <mat-card-actions fxLayout="row" fxLayoutAlign="space-between start">
+                    <mat-card-actions fxLayout="row wrap" fxLayoutAlign="space-between start">
+
+                        <button mat-button [matMenuTriggerFor]="menu">Album</button>
+                        <mat-menu #menu="matMenu">
+                            <button mat-menu-item>Album 1 </button>
+                            <button mat-menu-item>Album 2</button>
+                            <button mat-menu-item>Album 3 </button>
+                            <button mat-menu-item>Album 4</button>
+                            <button mat-menu-item>Album 5 </button>
+                            <button mat-menu-item>Album 6</button>
+                        </mat-menu>
+
+                        <button mat-button [matMenuTriggerFor]="menu1">Share</button>
+                        <mat-menu #menu1="matMenu">
+                            <button mat-menu-item>public</button>
+                            <button mat-menu-item>Friends Only</button>
+                            <button mat-menu-item>private</button>
+                            <button mat-menu-item>Custom</button>
+
+                        </mat-menu>
+
+                        
+                        <button mat-button [matMenuTriggerFor]="menu1">Share</button>
+                        <mat-menu #menu1="matMenu">
+                            <button mat-menu-item>public</button>
+                            <button mat-menu-item>Friends Only</button>
+                            <button mat-menu-item>private</button>
+                            <button mat-menu-item>Custom</button>
+
+                        </mat-menu>
+
                         <button mat-icon-button (click)="delete(resource.resourceUuid)">
                             <mat-icon>delete</mat-icon>
                         </button>
                         <button mat-icon-button (click)="makePublic(resource.resourceUuid, !resource.publicAccess)">
                             <mat-icon>share</mat-icon>
                         </button>
+
 
                     </mat-card-actions>
 

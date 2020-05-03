@@ -15,6 +15,7 @@ const routes: Routes = [
   { path: 'message', component: MessangerComponent },
   { path: 'secure', component: SecureComponent, canActivate: [AuthGuard] },
   { path: 'maestro', component: ProfileComponent, canActivate: [AuthGuard] },
+  { path: 'setting', component: ProfileComponent, canActivate: [AuthGuard] },
   //{ path: 'maestro/resource', component: ResourceComponent, canActivate: [AuthGuard] },
   { path: 'signin', component: SigninComponent },
   { path: 'signup', component: SignupComponent }

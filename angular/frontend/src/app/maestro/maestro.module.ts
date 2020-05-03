@@ -14,9 +14,11 @@ import { VideoComponent } from './content/video/video.component';
 import { NgxDropzoneModule } from 'ngx-dropzone';
 import { FriendComponent } from './content/friend/friend.component';
 import { FilterPipe } from './content/friend/pipe/filter.pipe';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import { PostComponent } from './content/post/post.component';
 
 @NgModule({
-  declarations: [ProfileComponent, ResourceComponent, ImageComponent, VideoComponent, FriendComponent, FilterPipe],
+  declarations: [ProfileComponent, ResourceComponent, ImageComponent, VideoComponent, FriendComponent, FilterPipe, PostComponent],
   imports: [
     CommonModule,
     MaterialModule,
@@ -24,6 +26,7 @@ import { FilterPipe } from './content/friend/pipe/filter.pipe';
     ReactiveFormsModule,
     NgxDropzoneModule,
     FormsModule,
+    MatTooltipModule,
     NgxsModule.forRoot([
       MemberState
     ]),

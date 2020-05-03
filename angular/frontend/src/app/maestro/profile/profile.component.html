@@ -10,48 +10,84 @@
 <br> -->
 <!-- <div fxFlex="100%"> -->
 <!-- <img class="cover" mat-card-image [src]="getSantizeUrl(memberInfo.profilePicPreSignedUrl)"> -->
-<mat-card>
-  <mat-card-header>
 
-    <!-- Avatar -->
-    <!-- <div mat-card-avatar class="example-header-image"
-            [style.background-image]="'url('+memberInfo.profilePicPreSignedUrl+')'"></div> -->
 
-    <!-- <img class="image-holder" [src]=getSantizeUrl(profilePic) />  -->
-    <!-- <mat-card-title>{{memberInfo.firstName + ' ' + memberInfo.lastName}}</mat-card-title>
-          <mat-card-subtitle>member since {{memberInfo.createDate}}</mat-card-subtitle> -->
-  </mat-card-header>
+
+<mat-card style="background-color: rgb(250, 250, 250); border-radius: 0px;">
+
+  <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="10px">
+
+    <div fxLayout="row"  fxLayoutAlign="space-between center">
+      <!-- <div class="round-image"></div> -->
+
+      <div fxFlex fxLayout="column" fxLayoutAlign="center center" fxHide.xs> 
+        <img [src]=getSantizeUrl(memberInfo.profilePicPreSignedUrl) style="width: 40%; min-width: 300px;" />
+        <div *ngIf="endPoint == '/setting'"> <button mat-raised-button>Change profile picture</button></div>
+      </div>
+
+      <div fxFlex fxLayout="column" fxLayoutAlign="center center" fxHide fxShow.xs> 
+        <img [src]=getSantizeUrl(memberInfo.profilePicPreSignedUrl) style="width: 100%;  overflow: hidden;" />
+        <div *ngIf="endPoint == '/setting'"> <button mat-raised-button>Change profile picture</button></div>
+      </div>
+
+
+      <div style="text-align: center;" fxHide.xs fxFlex>
+        <h1>5</h1>
+        <button mat-stroked-button>Message</button>
+      </div>
+
+      <div style="text-align: center;" fxHide.xs fxFlex>
+        <h1>10</h1>
+        <button mat-stroked-button>Freind reequest</button>
+      </div>
+
+      <div style="text-align: center;" fxHide.xs fxFlex>
+        <h1>100</h1>
+        <button mat-stroked-button>Following</button>
+      </div>
+
+    </div>
+
+    <div>
+      <mat-card-title>{{memberInfo.firstName + ' ' + memberInfo.lastName}}</mat-card-title>
+      <mat-card-subtitle>member since {{memberInfo.createDate}}</mat-card-subtitle>
+    </div>
+
+  </div>
+
+
 
   <mat-card-content>
-    <mat-card-title>{{memberInfo.firstName + ' ' + memberInfo.lastName}}</mat-card-title>
-    <mat-card-subtitle>member since {{memberInfo.createDate}}</mat-card-subtitle>
+
+
+    <!-- settings -->
     <!-- <pre>{{formGroup.value | json}}</pre> -->
+    <div *ngIf="endPoint == '/setting'">
+      <form class="example-form" [formGroup]="formGroup">
 
-    <form class="example-form" [formGroup]="formGroup">
+        <mat-form-field class="example-full-width">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" placeholder={{memberInfo.email}}>
+          <button matSuffix mat-icon-button color="primary">
+            <mat-icon *ngIf="formGroup.controls.email?.pristine || formGroup.controls.email?.status == 'DISABLED'"
+              (click)="edit('email')">edit</mat-icon>
+            <mat-icon *ngIf="!formGroup.controls.email?.pristine && formGroup.controls.email?.status == 'VALID'"
+              (click)="save('email')">save</mat-icon>
+          </button>
+        </mat-form-field>
 
-      <mat-form-field class="example-full-width">
-        <mat-label>Email</mat-label>
-        <input matInput formControlName="email" placeholder={{memberInfo.email}}>
-        <button matSuffix mat-icon-button color="primary">
-          <mat-icon *ngIf="formGroup.controls.email?.pristine || formGroup.controls.email?.status == 'DISABLED'"
-            (click)="edit('email')">edit</mat-icon>
-          <mat-icon *ngIf="!formGroup.controls.email?.pristine && formGroup.controls.email?.status == 'VALID'"
-            (click)="save('email')">save</mat-icon>
-        </button>
-      </mat-form-field>
-
-      <mat-form-field class="example-full-width">
-        <mat-label>Phone</mat-label>
-        <input matInput formControlName="phone" placeholder={{memberInfo.phone}}>
-        <button matSuffix mat-icon-button color="primary">
-          <mat-icon *ngIf="formGroup.controls.phone?.pristine || formGroup.controls.phone?.status == 'DISABLED'"
-            (click)="edit('phone')">edit</mat-icon>
-          <mat-icon *ngIf="!formGroup.controls.phone?.pristine && formGroup.controls.phone?.status == 'VALID'"
-            (click)="save('phone')">save</mat-icon>
-        </button>
-      </mat-form-field>
-    </form>
-
+        <mat-form-field class="example-full-width">
+          <mat-label>Phone</mat-label>
+          <input matInput formControlName="phone" placeholder={{memberInfo.phone}}>
+          <button matSuffix mat-icon-button color="primary">
+            <mat-icon *ngIf="formGroup.controls.phone?.pristine || formGroup.controls.phone?.status == 'DISABLED'"
+              (click)="edit('phone')">edit</mat-icon>
+            <mat-icon *ngIf="!formGroup.controls.phone?.pristine && formGroup.controls.phone?.status == 'VALID'"
+              (click)="save('phone')">save</mat-icon>
+          </button>
+        </mat-form-field>
+      </form>
+    </div>
 
     <div>
     </div>
@@ -61,19 +97,19 @@
 
 </mat-card>
 <!-- lazy loading -->
-<mat-tab-group mat-align-tabs="center" color="accent">
-
-  <mat-tab label="Friends">
-    <app-friend></app-friend>
-  </mat-tab>
+<mat-tab-group mat-align-tabs="center" color="accent" *ngIf="endPoint !== '/setting'">
 
   <mat-tab label="Post">
     <ng-template matTabContent>
-      <!-- <app-friend></app-friend> -->
+      <app-post></app-post>
     </ng-template>
   </mat-tab>
 
-
+  <mat-tab label="Friends">
+    <ng-template matTabContent>
+      <app-friend></app-friend>
+    </ng-template>
+  </mat-tab>
 
   <mat-tab label="Photo">
     <ng-template matTabContent>

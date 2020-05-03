@@ -6,6 +6,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Select, Store } from '@ngxs/store';
 import { first } from 'rxjs/operators'
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-profile',
@@ -16,7 +17,7 @@ export class ProfileComponent implements OnInit {
 
   showResourcesFlag: boolean;
   memberInfo = {};
-
+  endPoint: string = '';
   @Select(state => state.member) memberState$;
   @Select(state => state.member.resources) memberStateResources$;
   formGroup = this.fb.group({
@@ -24,11 +25,18 @@ export class ProfileComponent implements OnInit {
     phone: [null, Validators.required]
   });
 
-  constructor(private httpService: HttpService, private store: Store, private router: Router, private sanitizer: DomSanitizer, private fb: FormBuilder) { }
+  constructor(
+    private httpService: HttpService,
+    private store: Store,
+    private router: Router,
+    private sanitizer: DomSanitizer,
+    private fb: FormBuilder,
+    private location: Location, ) { }
 
   ngOnInit(): void {
     //check if member is in store if its there use data from there else make api call
     //create user in maestro portal if it doesn't exist already
+    this.endPoint = this.router.url;
     this.getMember(true);
 
     //disable all form group initially

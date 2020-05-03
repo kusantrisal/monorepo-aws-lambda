@@ -11,12 +11,14 @@
       <div>
         <span routerLink="/signin" routerLinkActive="active" *ngIf="!authService.isAuthenticated()">Sign in</span>
         <span routerLink="/signup" routerLinkActive="active" *ngIf="!authService.isAuthenticated()">Sign up</span>
-
+        <!-- <img md-fab-image [src]="userInfo.photoUrl"> -->
         <div *ngIf="authService.isAuthenticated()">
-          <button mat-mini-fab color="accent" [matMenuTriggerFor]="menu">{{memberInfoLoadedFromMaestro}}
-          </button>
+          <div mat-card-avatar [style.background-image]="'url('+profilePicPreSignedUrl+')'"  [matMenuTriggerFor]="menu"></div> 
+          
+<!-- {{profilePicPreSignedUrl}} -->
           <mat-menu #menu="matMenu">
             <button mat-menu-item><span routerLink="/maestro" routerLinkActive="active">Account</span></button>
+            <button mat-menu-item><span routerLink="/setting" routerLinkActive="active">Settings</span></button>
             <button mat-menu-item> <span (click)="authService.logout()" routerLinkActive="active">Logout</span></button>
           </mat-menu>
         </div>
@@ -24,7 +26,7 @@
     </mat-toolbar>
   </div>
 
-  <div  >
+  <div>
     <router-outlet></router-outlet>
   </div>
 

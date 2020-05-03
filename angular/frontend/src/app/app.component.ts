@@ -14,6 +14,7 @@ export class AppComponent implements OnInit, OnDestroy {
   @Select(state => state.member) memberState$;
 
   memberInfoLoadedFromMaestro = 'Z';
+  profilePicPreSignedUrl = '';
   title = 'zerotoheroquick-frontend';
   mediaSub: Subscription;
   screenSize: string;
@@ -26,8 +27,9 @@ export class AppComponent implements OnInit, OnDestroy {
     this.memberState$
       .subscribe(
         mem => {
-       //   console.log(mem)
+          console.log(mem)
           this.memberInfoLoadedFromMaestro = mem.username.charAt(0).toUpperCase();
+          this.profilePicPreSignedUrl = mem.member.profilePicPreSignedUrl;
         });
     this.mediaSub = this.mediaObserver.media$.subscribe((result: MediaChange) => {
       //  console.log(result.mqAlias)
