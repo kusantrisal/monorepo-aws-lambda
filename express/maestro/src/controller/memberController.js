@@ -10,6 +10,33 @@ const AWS = require('aws-sdk');
 AWS.config.update({ region: 'us-east-1' });
 const s3 = new AWS.S3();
 
+
+router.get("/searchUserByNameLike/:userName", async (req, res, next) => {
+  let items = {};
+  let response = [];
+  if (req.params.userName.indexOf(' ') >= 0) {
+    items = await memberRepo.getMemberByFullname(req.params.userName.replace(/\s+/g, '').toLowerCase());
+  } else {
+    console.log(req.params.userName.toLowerCase())
+    items = await memberRepo.getMemberByFirstName(req.params.userName.toLowerCase());
+  }
+
+  if (items && items.Items && items.Items.length > 0) {
+
+    items.Items.forEach(item => {
+
+      item.profilePicPreSignedUrl = s3.getSignedUrl('getObject', {
+        Bucket: item.profilePic.bucket,
+        Key: item.profilePic.key,
+        Expires: 60 * 5
+      });
+      response.push(item);
+    }
+    )
+  }
+  res.send(response);
+});
+
 //create member
 router.post("/createMember", auth, async (req, res, next) => {
   try {
@@ -33,10 +60,11 @@ router.post("/createMember", auth, async (req, res, next) => {
 
       let member = {
         memberUuid: response.data.principal.memberUuid,
-        firstName: response.data.principal.firstName,
-        lastName: response.data.principal.lastName,
+        firstName: response.data.principal.firstName.toLowerCase(),
+        lastName: response.data.principal.lastName.toLowerCase(),
         email: response.data.principal.email,
         phone: response.data.principal.phone,
+        fullName: (response.data.principal.firstName + response.data.principal.lastName).toLowerCase(),
         profilePic: { bucket: 'zerotoheroquick-app-resources', key: 'images/profile-pic.jpg' }
       };
 
@@ -165,6 +193,7 @@ function validateMember(member) {
     profilePic: Joi.object().optional(),
     firstName: Joi.string().min(3).required(),
     lastName: Joi.string().min(3).required(),
+    fullName: Joi.string().min(3).required(),
     phone: Joi.string().min(10).required(),
     email: Joi.string().required().email(),
     createDate: Joi.string().optional().default(now),

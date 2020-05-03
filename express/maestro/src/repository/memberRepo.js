@@ -70,10 +70,48 @@ const getMemberByMemberUuid = async memberUuid => {
     }
 }
 
+const getMemberByFullname = async (fullName) => {
+    try {
+        let params = {
+            TableName: process.env.MEMBER || 'MEMBER',
+            IndexName: "fullName-index",
+            KeyConditionExpression: 'fullName = :fullName',
+            ExpressionAttributeValues: {
+                ':fullName': fullName
+            },
+            ProjectionExpression: "memberUuid, firstName, lastName, profilePic"
+        };
+        let member = await dynamoClient.query(params).promise();
+        return member;
+    } catch (e) {
+        return e;
+    }
+}
+
+const getMemberByFirstName = async (firstName) => {
+    try {
+        let params = {
+            TableName: process.env.MEMBER || 'MEMBER',
+            IndexName: "firstName-index",
+            KeyConditionExpression: 'firstName = :firstName',
+            ExpressionAttributeValues: {
+                ':firstName': firstName
+            },
+            ProjectionExpression: "memberUuid, firstName, lastName, profilePic"
+        };
+        let member = await dynamoClient.query(params).promise();
+        return member;
+    } catch (e) {
+        return e;
+    }
+}
+
 
 module.exports = {
     createMember,
     getMemberByMemberUuid,
     deleteMember,
-    updateMemberValue
+    updateMemberValue,
+    getMemberByFullname,
+    getMemberByFirstName
 }

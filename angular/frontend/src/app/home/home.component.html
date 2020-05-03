@@ -1,2 +1,40 @@
-<p>home works!</p>
-<!-- <app-profile></app-profile> -->
+<div fxLayout="column" fxLayoutAlign="space-around center">
+
+    <div fxFlex style="width: 80%;">
+        <mat-card >
+            <form class="example-form" [formGroup]='searchForm' (ngSubmit)="search()">
+                <mat-form-field class="example-full-width">
+                    <mat-label>Searching for </mat-label>
+                    <input matInput formControlName='searchName'>
+                </mat-form-field>
+                <button mat-button color="accent" hidden>
+                    <!-- <mat-icon>search</mat-icon> -->
+                </button>
+            </form>
+            <!-- {{members | json}} -->
+            <div fxLayout="column" fxFill fxLayoutAlign="center center">
+                <mat-list style="margin: 5px;min-width: 95%;" *ngFor="let member of members ; let i = index">
+                    <mat-list-item style=" background-color: rgb(250, 250, 250); ">
+                        <img matListAvatar src={{member.profilePicPreSignedUrl}}
+                            style="border-radius: 5px; width: 100px; height: 75px; overflow: hidden; margin: 0; padding: 0;">
+                        <h2 matLine> {{member.firstName + ' ' + member.lastName}} </h2>
+                        <p matLine>
+                            <!-- <span style="color: rgb(22, 187, 0);" *ngIf="friend.subject == 'Online'"> {{member.memberUuid}}
+                            </span> -->
+                        </p>
+                        <button mat-icon-button (click)="sendFriendRequest(resource.resourceUuid, !resource.publicAccess)">
+                            <mat-icon>add</mat-icon>
+                        </button>
+                        <button mat-icon-button (click)="makePublic(resource.resourceUuid, !resource.publicAccess)">
+                            <mat-icon>message</mat-icon>
+                        </button>
+                    </mat-list-item>
+                </mat-list>
+            </div>
+        </mat-card>
+    </div>
+    <div style="width: 80%;">
+
+    </div>
+
+</div>

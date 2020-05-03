@@ -25,6 +25,14 @@ export class FriendComponent implements OnInit {
 
     this.displayedColumns = ['from', 'subject', 'content', 'profilePicPreSignedUrl'];
     this.friends.push({ from: 'Richa', subject: 'sub', content: 'con', profilePicPreSignedUrl: 'assets/images/lion.jpg' })
+    this.friends.push({ from: 'Ranjit Risal', subject: 'Online', content: 'con', profilePicPreSignedUrl: 'assets/images/lion.jpg' })
+    this.friends.push({ from: 'Partap Risal', subject: 'sub', content: 'con', profilePicPreSignedUrl: 'assets/images/lion.jpg' })
+    this.friends.push({ from: 'Gudi Risal', subject: 'sub', content: 'con', profilePicPreSignedUrl: 'assets/images/lion.jpg' })
+    this.friends.push({ from: 'Richa', subject: 'sub', content: 'con', profilePicPreSignedUrl: 'assets/images/lion.jpg' })
+    this.friends.push({ from: 'Ranjit', subject: 'sub', content: 'con', profilePicPreSignedUrl: 'assets/images/lion.jpg' })
+    this.friends.push({ from: 'Partap', subject: 'sub', content: 'con', profilePicPreSignedUrl: 'assets/images/lion.jpg' })
+    this.friends.push({ from: 'Gudi', subject: 'sub', content: 'con', profilePicPreSignedUrl: 'assets/images/lion.jpg' })
+    this.friends.push({ from: 'Richa', subject: 'sub', content: 'con', profilePicPreSignedUrl: 'assets/images/lion.jpg' })
     this.friends.push({ from: 'Ranjit', subject: 'sub', content: 'con', profilePicPreSignedUrl: 'assets/images/lion.jpg' })
     this.friends.push({ from: 'Partap', subject: 'sub', content: 'con', profilePicPreSignedUrl: 'assets/images/lion.jpg' })
     this.friends.push({ from: 'Gudi', subject: 'sub', content: 'con', profilePicPreSignedUrl: 'assets/images/lion.jpg' })

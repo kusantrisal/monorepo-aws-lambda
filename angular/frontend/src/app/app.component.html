@@ -4,7 +4,10 @@
     <mat-toolbar color="primary" class="navbar">
 
       <div>
-        <span routerLink="/home" routerLinkActive="active">Home</span>
+
+
+        <span routerLink="/home" routerLinkActive="active">    Home</span>    
+          <!-- <mat-icon aria-hidden="false" aria-label="Example home icon">home</mat-icon> -->
         <span routerLink="/secure" routerLinkActive="active" *ngIf="authService.isAuthenticated()">Secure</span>
       </div>
 

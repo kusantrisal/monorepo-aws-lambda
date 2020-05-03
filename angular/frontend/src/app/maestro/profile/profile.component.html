@@ -15,14 +15,16 @@
 
 <mat-card style="background-color: rgb(250, 250, 250); border-radius: 0px;">
 
-  <div fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="10px">
+  <div fxLayout="column" fxLayoutAlign="space-between start" fxLayoutGap="10px" >
 
     <div fxLayout="row"  fxLayoutAlign="space-between center">
       <!-- <div class="round-image"></div> -->
 
       <div fxFlex fxLayout="column" fxLayoutAlign="center center" fxHide.xs> 
+ 
         <img [src]=getSantizeUrl(memberInfo.profilePicPreSignedUrl) style="width: 40%; min-width: 300px;" />
-        <div *ngIf="endPoint == '/setting'"> <button mat-raised-button>Change profile picture</button></div>
+        <div *ngIf="endPoint == '/setting'"> <button mat-button>Change profile picture</button></div>
+        <!-- <div *ngIf="endPoint == '/setting'"> <button mat-icon-button><mat-icon>edit</mat-icon></button></div> -->
       </div>
 
       <div fxFlex fxLayout="column" fxLayoutAlign="center center" fxHide fxShow.xs> 
@@ -38,7 +40,7 @@
 
       <div style="text-align: center;" fxHide.xs fxFlex>
         <h1>10</h1>
-        <button mat-stroked-button>Freind reequest</button>
+        <button mat-stroked-button>Freind request</button>
       </div>
 
       <div style="text-align: center;" fxHide.xs fxFlex>
@@ -50,7 +52,7 @@
 
     <div>
       <mat-card-title>{{memberInfo.firstName + ' ' + memberInfo.lastName}}</mat-card-title>
-      <mat-card-subtitle>member since {{memberInfo.createDate}}</mat-card-subtitle>
+      <!-- <mat-card-subtitle>member since {{memberInfo.createDate}}</mat-card-subtitle> -->
     </div>
 
   </div>
@@ -99,17 +101,19 @@
 <!-- lazy loading -->
 <mat-tab-group mat-align-tabs="center" color="accent" *ngIf="endPoint !== '/setting'">
 
+  <mat-tab label="Friends">
+    <ng-template matTabContent>
+      <app-friend></app-friend>
+    </ng-template>
+  </mat-tab>
+  
   <mat-tab label="Post">
     <ng-template matTabContent>
       <app-post></app-post>
     </ng-template>
   </mat-tab>
 
-  <mat-tab label="Friends">
-    <ng-template matTabContent>
-      <app-friend></app-friend>
-    </ng-template>
-  </mat-tab>
+
 
   <mat-tab label="Photo">
     <ng-template matTabContent>
