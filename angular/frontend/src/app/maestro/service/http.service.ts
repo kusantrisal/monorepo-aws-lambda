@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { tap, map, catchError, retry } from 'rxjs/operators';
 import { Member } from '../model/member.model';
+import { friend } from '../content/friend/friend.component';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +26,6 @@ export class HttpService {
         catchError(err => { console.log('GetMember Error'); return throwError(err); })
       );
   }
-
 
   createMember() {
 
@@ -52,7 +52,7 @@ export class HttpService {
   addResource(file) {
     const fd = new FormData();
     fd.append('image', file);
-    fd.append('field','formdata');
+    fd.append('field', 'formdata');
     return this.http.post(this.MAESTRO_BASE_URL + '/resource/addResource', fd, { reportProgress: true, observe: 'events' });
   }
 
@@ -69,6 +69,10 @@ export class HttpService {
       .set('value', allowAccess);
 
     return this.http.put(this.MAESTRO_BASE_URL + '/resource/makePublic', body);
+  }
+
+  getMemberPublicInfoByMemberUuid(memberUuid) {
+    return this.http.get<friend>(this.MAESTRO_BASE_URL + '/member/getMemberPublicInfoByMemberUuid/' + memberUuid, { withCredentials: false, responseType: 'json' });
   }
 
   //test only

@@ -10,6 +10,71 @@ const AWS = require('aws-sdk');
 AWS.config.update({ region: 'us-east-1' });
 const s3 = new AWS.S3();
 
+router.get('/sendFriendRequest/:memberUuid', auth, async (req, res, next) => {
+
+  let requestingMemberUuid = req.userDate.memberUuid;
+  let requestedMemberUuid = req.params.memberUuid;
+
+  if (!req.params.memberUuid) {
+    return next(new Error('MemberUuid needed'));
+  }
+  let [requestingMemberInfo, requestedMemberInfo] = await Promise.all([memberRepo.getMemberByMemberUuid(requestingMemberUuid), memberRepo.getMemberByMemberUuid(requestedMemberUuid)]);
+  if (!requestingMemberInfo || (requestingMemberInfo.Items && requestingMemberInfo.Items.length !== 1)) {
+    res.statusCode = 404;
+    return next(new Error(`Unable to fetch member ${req.userDate.memberUuid}`));
+  }
+  // console.log(items);
+  let member = requestingMemberInfo.Items[0];
+  if (member.friends && member.friends.length > 0) {
+    member.friends.forEach(friend => {
+      if (friend.memberUuid == requestedMemberUuid) {
+        return next(new Error(`Unable to send request to  ${requestedMemberUuid}`));
+      }
+    })
+  }
+  //save on sender side
+  let friendRequestFromSender = {
+    memberUuid: requestedMemberInfo.Items[0].memberUuid,
+    firstName: requestedMemberInfo.Items[0].firstName,
+    lastName: requestedMemberInfo.Items[0].lastName,
+    profilePic: requestedMemberInfo.Items[0].profilePic,
+    status: 'Request sent',
+    createdDate: Date.now()
+  }
+
+  //save on receiver side
+  let friendRequestToReceiver = {
+    memberUuid: requestingMemberUuid,
+    firstName: member.firstName,
+    lastName: member.lastName,
+    profilePic: member.profilePic,
+    status: 'Pending Request',
+    createdDate: Date.now()
+  }
+
+  let [respose1, respose2] = await Promise.all([memberRepo.friendRequest(requestingMemberUuid, 'friends', friendRequestFromSender), memberRepo.friendRequest(requestedMemberUuid, 'friends', friendRequestToReceiver)]);
+
+  if (!respose1.Attributes || !respose2.Attributes) {
+    return next(new Error('Friend request failed'));
+  }
+  res.send(respose1.Attributes);
+})
+
+router.get("/getMemberPublicInfoByMemberUuid/:memberUuid", async (req, res, next) => {
+  let response;
+  let item = await memberRepo.getMemberPublicInfoByMemberUuid(req.params.memberUuid);
+
+  item.Items.forEach(profile => {
+    profile.profilePicPreSignedUrl = s3.getSignedUrl('getObject', {
+      Bucket: profile.profilePic.bucket,
+      Key: profile.profilePic.key,
+      Expires: 60 * 5
+    });
+    response = profile;
+  })
+
+  res.send(response);
+});
 
 router.get("/searchUserByNameLike/:userName", async (req, res, next) => {
   let items = {};
@@ -22,19 +87,10 @@ router.get("/searchUserByNameLike/:userName", async (req, res, next) => {
   }
 
   if (items && items.Items && items.Items.length > 0) {
-
-    items.Items.forEach(item => {
-
-      item.profilePicPreSignedUrl = s3.getSignedUrl('getObject', {
-        Bucket: item.profilePic.bucket,
-        Key: item.profilePic.key,
-        Expires: 60 * 5
-      });
-      response.push(item);
-    }
-    )
+    res.send(items.Items);
+  } else {
+    res.send(response);
   }
-  res.send(response);
 });
 
 //create member
@@ -65,7 +121,7 @@ router.post("/createMember", auth, async (req, res, next) => {
         email: response.data.principal.email,
         phone: response.data.principal.phone,
         fullName: (response.data.principal.firstName + response.data.principal.lastName).toLowerCase(),
-        profilePic: { bucket: 'zerotoheroquick-app-resources', key: 'images/profile-pic.jpg' }
+        profilePic: { bucket: 'zerotoheroquick-app-resources-public', key: 'images/profile-pic.jpg' }
       };
 
       const { error, value } = validateMember(member);

@@ -20,14 +20,17 @@ export class AppComponent implements OnInit, OnDestroy {
   screenSize: string;
   deviceXs: boolean;
 
-  constructor(public authService: AuthService, public mediaObserver: MediaObserver, private store: Store) { }
+  constructor(
+    public authService: AuthService, 
+    public mediaObserver: MediaObserver,
+     private store: Store) { }
 
   ngOnInit() {
 
     this.memberState$
       .subscribe(
         mem => {
-          console.log(mem)
+       //   console.log(mem)
           this.memberInfoLoadedFromMaestro = mem.username.charAt(0).toUpperCase();
           this.profilePicPreSignedUrl = mem.member.profilePicPreSignedUrl;
         });

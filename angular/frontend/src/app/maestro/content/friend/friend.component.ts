@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
+import { Store, Select } from '@ngxs/store';
+import { HttpService } from '../../service/http.service';
+import { first } from 'rxjs/operators';
 
-export interface message {
-  from: string;
-  subject: string;
-  content: string;
-  profilePicPreSignedUrl: string;
+export interface friend {
+  memberUuid: string;
+  firstName: string;
+  lastName: string;
+  status: string;
 }
 
 @Component({
@@ -15,28 +17,29 @@ export interface message {
 })
 export class FriendComponent implements OnInit {
 
+  @Select(state => state.member) memberState$;
+
   search: string = '';
-  friends: message[] = [];
+  friends: friend[] = [];
   displayedColumns: string[];
   dataSource;
-  constructor() { }
+  constructor(private store: Store, private httpService: HttpService) { }
 
   ngOnInit(): void {
+    this.memberState$
+      .pipe(first())
+      .subscribe(
+        mem => {
+          //   console.log(mem.member.friends)
+          if (mem.member.friends) {
 
-    this.displayedColumns = ['from', 'subject', 'content', 'profilePicPreSignedUrl'];
-    this.friends.push({ from: 'Richa', subject: 'sub', content: 'con', profilePicPreSignedUrl: 'assets/images/lion.jpg' })
-    this.friends.push({ from: 'Ranjit Risal', subject: 'Online', content: 'con', profilePicPreSignedUrl: 'assets/images/lion.jpg' })
-    this.friends.push({ from: 'Partap Risal', subject: 'sub', content: 'con', profilePicPreSignedUrl: 'assets/images/lion.jpg' })
-    this.friends.push({ from: 'Gudi Risal', subject: 'sub', content: 'con', profilePicPreSignedUrl: 'assets/images/lion.jpg' })
-    this.friends.push({ from: 'Richa', subject: 'sub', content: 'con', profilePicPreSignedUrl: 'assets/images/lion.jpg' })
-    this.friends.push({ from: 'Ranjit', subject: 'sub', content: 'con', profilePicPreSignedUrl: 'assets/images/lion.jpg' })
-    this.friends.push({ from: 'Partap', subject: 'sub', content: 'con', profilePicPreSignedUrl: 'assets/images/lion.jpg' })
-    this.friends.push({ from: 'Gudi', subject: 'sub', content: 'con', profilePicPreSignedUrl: 'assets/images/lion.jpg' })
-    this.friends.push({ from: 'Richa', subject: 'sub', content: 'con', profilePicPreSignedUrl: 'assets/images/lion.jpg' })
-    this.friends.push({ from: 'Ranjit', subject: 'sub', content: 'con', profilePicPreSignedUrl: 'assets/images/lion.jpg' })
-    this.friends.push({ from: 'Partap', subject: 'sub', content: 'con', profilePicPreSignedUrl: 'assets/images/lion.jpg' })
-    this.friends.push({ from: 'Gudi', subject: 'sub', content: 'con', profilePicPreSignedUrl: 'assets/images/lion.jpg' })
-    //   this.dataSource = new MatTableDataSource(this.friends);
+            for (const f of mem.member.friends) {
+              //TODO convert bucket and key name to url
+              f.profilePicUrl = 'https://' + f.profilePic.bucket + '.s3.amazonaws.com/'+ f.profilePic.key;
+              this.friends.push(f)
+            }
+          }
+        });
   }
 
 

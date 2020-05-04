@@ -101,6 +101,10 @@
 <!-- lazy loading -->
 <mat-tab-group mat-align-tabs="center" color="accent" *ngIf="endPoint !== '/setting'">
 
+  <mat-tab label="Video">
+    THIS IS Video
+  </mat-tab>
+  
   <mat-tab label="Friends">
     <ng-template matTabContent>
       <app-friend></app-friend>
@@ -121,9 +125,7 @@
     </ng-template>
   </mat-tab>
 
-  <mat-tab label="Video">
-    THIS IS Video
-  </mat-tab>
+
 
 </mat-tab-group>
 <!-- <mat-tab-group mat-align-tabs="center" >

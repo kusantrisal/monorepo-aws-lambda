@@ -31,6 +31,30 @@ const deleteMember = async member => {
     }
 }
 
+const friendRequest = async (memberUuid, key, value) => {
+
+    try {
+        let params = {
+            TableName: process.env.MEMBER || 'MEMBER',
+            Key: {
+                'memberUuid': memberUuid
+            },
+            UpdateExpression: "SET  #key = list_append(if_not_exists(#key, :empty_list),:value)",
+            ExpressionAttributeNames: {
+                "#key": key
+            },
+            ExpressionAttributeValues: {
+                ":value": [value],
+                ':empty_list': []
+            },
+            ReturnValues: 'UPDATED_NEW'
+        };
+        return await dynamoClient.update(params).promise();
+    } catch (e) {
+        return e;
+    }
+}
+
 const updateMemberValue = async (memberUuid, key, value) => {
 
     try {
@@ -62,6 +86,23 @@ const getMemberByMemberUuid = async memberUuid => {
             ExpressionAttributeValues: {
                 ':memberUuid': memberUuid
             }
+        };
+        let member = await dynamoClient.query(params).promise();
+        return member;
+    } catch (e) {
+        return e;
+    }
+}
+
+const getMemberPublicInfoByMemberUuid = async memberUuid => {
+    try {
+        let params = {
+            TableName: process.env.MEMBER || 'MEMBER',
+            KeyConditionExpression: 'memberUuid = :memberUuid',
+            ExpressionAttributeValues: {
+                ':memberUuid': memberUuid
+            },
+            ProjectionExpression: "memberUuid, firstName, lastName, profilePic"
         };
         let member = await dynamoClient.query(params).promise();
         return member;
@@ -113,5 +154,7 @@ module.exports = {
     deleteMember,
     updateMemberValue,
     getMemberByFullname,
-    getMemberByFirstName
+    getMemberByFirstName,
+    friendRequest,
+    getMemberPublicInfoByMemberUuid
 }

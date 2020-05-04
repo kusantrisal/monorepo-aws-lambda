@@ -12,7 +12,12 @@ export class HttpService {
 
   constructor(private http: HttpClient) { }
 
-  searchUserByNameLike (userName) {
-    return this.http.get<member[]>(this.MAESTRO_BASE_URL + '/member/searchUserByNameLike/' + userName);
+  searchUserByNameLike(userName) {
+    return this.http.get<member[]>(this.MAESTRO_BASE_URL + '/member/searchUserByNameLike/' + userName, { withCredentials: false, responseType: 'json' });
+  }
+
+  sendFriendRequest(memberUuid) {
+    console.log(memberUuid);
+    return this.http.get(this.MAESTRO_BASE_URL + '/member/sendFriendRequest/' + memberUuid, { withCredentials: false, responseType: 'json' });
   }
 }

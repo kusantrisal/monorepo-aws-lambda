@@ -1,17 +1,17 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { message } from '../friend.component';
+import { friend } from '../friend.component';
 
 @Pipe({
   name: 'filter'
 })
 export class FilterPipe implements PipeTransform {
   tempValues: any[];
-  transform(messages: message[], search: string): any {
+  transform(friends: friend[], search: string): any {
 
     if (search == '') {
-      return messages;
+      return friends;
     }
-    return messages.filter(mem => mem.from.toLowerCase().includes(search.toLowerCase()));
+    return friends.filter(mem => mem.firstName.toLowerCase().includes(search.toLowerCase()));
   }
 
 }
