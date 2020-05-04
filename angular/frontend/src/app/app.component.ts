@@ -1,9 +1,11 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { AuthService } from './service/auth/auth.service';
 import { MediaObserver, MediaChange } from '@angular/flex-layout';
 import { Subscription } from 'rxjs';
 import { Select, Store } from '@ngxs/store';
 import { first } from 'rxjs/operators'
+import { AddMember } from './maestro/actions/member.actions';
+import { ProfileComponent } from './maestro/profile/profile.component';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -21,16 +23,19 @@ export class AppComponent implements OnInit, OnDestroy {
   deviceXs: boolean;
 
   constructor(
-    public authService: AuthService, 
+    public authService: AuthService,
     public mediaObserver: MediaObserver,
-     private store: Store) { }
+    private store: Store) { }
 
   ngOnInit() {
+    if (this.authService.isAuthenticated()) {
+      console.log('Should call getMember');
+    }
 
     this.memberState$
       .subscribe(
         mem => {
-       //   console.log(mem)
+          //   console.log(mem)
           this.memberInfoLoadedFromMaestro = mem.username.charAt(0).toUpperCase();
           this.profilePicPreSignedUrl = mem.member.profilePicPreSignedUrl;
         });

@@ -15,6 +15,7 @@ import { Location } from '@angular/common';
 })
 export class ProfileComponent implements OnInit {
 
+  test= 'hello from profile'
   showResourcesFlag: boolean;
   memberInfo = {};
   endPoint: string = '';
@@ -83,7 +84,7 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  getMember(forceGetMember) {
+  public getMember(forceGetMember) {
     this.memberState$
       .pipe(first())
       .subscribe(
